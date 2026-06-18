@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Enum\B24;
+
+enum Contact: string
+{
+    case ID = 'ID';
+    case NAME = 'NAME';
+    case LAST_NAME = 'LAST_NAME';
+    case BIRTHDATE = 'BIRTHDATE';
+    case SOURCE_ID = 'SOURCE_ID';
+    case COMMENTS = 'COMMENTS';
+    case PHONE = 'PHONE';
+    case EMAIL = 'EMAIL';
+    case PROJECT = 'UF_CRM_61922EC888EDF';
+    case COMMUNITY = 'UF_CRM_61922EC8CC6B6';
+    case PAYMENT_TYPE = 'UF_CRM_61B0B0515A69E';
+    case AREA = 'UF_CRM_61922EC8BFC0C';
+    case ROOMS = 'UF_CRM_61E56868D2486';
+    case WORKPLACE = 'UF_CRM_623D95716CDA2';
+    case SALARY = 'UF_CRM_62415A75A81E4';
+    case COMMUNICATION_TYPE = 'UF_CRM_62441D069E527';
+    case CUSTOMER_TYPE = 'UF_CRM_641D814665681';
+    case PURCHASING_POWER = 'UF_CRM_653772D161CC8';
+    case LOYAL_CUSTOMER = 'UF_CRM_653772D1BCB84';
+}

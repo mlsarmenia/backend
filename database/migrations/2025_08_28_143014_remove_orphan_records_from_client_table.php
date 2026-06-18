@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        DB::table('client')
+            ->leftJoin('contact', 'contact.id', '=', 'client.contact_id')
+            ->whereNull('contact.id')
+            ->delete();
+        Schema::table('client', function (Blueprint $table) {
+            $table->foreign('contact_id')
+                ->references('id')
+                ->on('contact')
+                ->onDelete('cascade');
+            $table->unique('contact_id');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('client', function (Blueprint $table) {
+            $table->dropUnique(['contact_id']);
+            $table->dropForeign(['contact_id']);
+        });
+    }
+};
