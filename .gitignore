@@ -3,6 +3,7 @@
 /public/storage
 /vendor
 .env
+auth.json
 .phpunit.result.cache
 /.idea
 /.vscode
