@@ -59,6 +59,10 @@ restore_application() {
     if [[ $status -ne 0 && "$deployment_started" == "true" && "$rollback_ready" == "true" ]]; then
         echo "Restoring the previous application files..."
         rsync -a --delete \
+            --omit-dir-times \
+            --no-perms \
+            --no-owner \
+            --no-group \
             --exclude '/.env' \
             --exclude '/auth.json' \
             --exclude '/storage' \
@@ -226,6 +230,10 @@ if [[ -f "$MANIFEST_FILE" ]]; then
 fi
 
 rsync -a \
+    --omit-dir-times \
+    --no-perms \
+    --no-owner \
+    --no-group \
     --exclude '/.env' \
     --exclude '/auth.json' \
     --exclude '/storage' \
@@ -234,8 +242,14 @@ rsync -a \
     "${release_dir}/" \
     "${APP_DIR}/"
 
-install -d -m 775 "$APP_DIR/vendor"
-rsync -a --delete "${release_dir}/vendor/" "${APP_DIR}/vendor/"
+mkdir -p "$APP_DIR/vendor"
+rsync -a --delete \
+    --omit-dir-times \
+    --no-perms \
+    --no-owner \
+    --no-group \
+    "${release_dir}/vendor/" \
+    "${APP_DIR}/vendor/"
 
 php artisan migrate --force --no-interaction
 php artisan optimize:clear
