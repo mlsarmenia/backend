@@ -4,7 +4,7 @@ set -Eeuo pipefail
 umask 0002
 
 readonly APP_DIR="/home/master/applications/bvcxzudysy/public_html"
-readonly LOCK_FILE="/home/master/applications/bvcxzudysy/github-deploy.lock"
+readonly LOCK_FILE="/home/master/mls-github-deploy.lock"
 readonly LOG_FILE="/home/master/mls-github-deploy.log"
 readonly DEPLOY_ROOT="/home/master/deploy/mls"
 readonly REPOSITORY_DIR="${DEPLOY_ROOT}/repository.git"
