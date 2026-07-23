@@ -273,6 +273,8 @@ class RenterCrudController extends CrudController
                     ],
                 ],
 
+                $this->clientBudgetCurrencyField(),
+
                 [
                     'name' => 'price_from',
                     'type' => "text",

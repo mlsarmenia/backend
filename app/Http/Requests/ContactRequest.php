@@ -28,6 +28,12 @@ class ContactRequest extends FormRequest
             'name_arm' => 'required',
             'last_name_arm' => 'required',
             'phone_mobile_1' => 'required|min:5|max:255',
+            'client.*.currency_id' => [
+                'nullable',
+                'required_with:client.*.price_from,client.*.price_to',
+                'integer',
+                'exists:c_currency,id',
+            ],
         ];
     }
 
