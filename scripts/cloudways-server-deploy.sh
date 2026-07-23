@@ -18,14 +18,17 @@ readonly GIT_IDENTITY="/home/master/.ssh/mls-github-readonly"
 readonly GIT_KNOWN_HOSTS="/home/master/.ssh/mls-github-known_hosts"
 readonly GIT_SSH_COMMAND="ssh -i ${GIT_IDENTITY} -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o CheckHostIP=no -o UserKnownHostsFile=${GIT_KNOWN_HOSTS}"
 
-original_command="${SSH_ORIGINAL_COMMAND:-}"
-
-if [[ ! "$original_command" =~ ^deploy[[:space:]][0-9a-f]{40}$ ]]; then
+revision=""
+if ! IFS= read -r revision || [[ ! "$revision" =~ ^[0-9a-f]{40}$ ]]; then
     echo "This key is restricted to MLS production deployments."
     exit 1
 fi
 
-revision="${original_command#deploy }"
+if IFS= read -r _; then
+    echo "The deployment request contained unexpected input."
+    exit 1
+fi
+
 release_dir=""
 new_manifest=""
 previous_manifest=""

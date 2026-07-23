@@ -36,7 +36,8 @@ printf '%s\n' "$CLOUDWAYS_DEPLOY_SSH_KEY" >"$key_file"
 chmod 600 "$key_file"
 
 echo "Starting the restricted production deployment for ${GITHUB_SHA}..."
-ssh \
+printf '%s\n' "$GITHUB_SHA" | ssh \
+    -T \
     -i "$key_file" \
     -o BatchMode=yes \
     -o IdentitiesOnly=yes \
@@ -44,8 +45,7 @@ ssh \
     -o ConnectTimeout=20 \
     -o ServerAliveInterval=30 \
     -o ServerAliveCountMax=20 \
-    "${CLOUDWAYS_SSH_USER}@${CLOUDWAYS_SSH_HOST}" \
-    "deploy ${GITHUB_SHA}"
+    "${CLOUDWAYS_SSH_USER}@${CLOUDWAYS_SSH_HOST}"
 
 echo "Checking ${PRODUCTION_URL}..."
 curl \

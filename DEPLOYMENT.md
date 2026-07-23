@@ -5,7 +5,8 @@ Pushes to `master` deploy automatically through
 
 The workflow:
 
-1. Connects with a restricted SSH key that can only run the MLS deployment.
+1. Connects with a restricted SSH key that can only run the MLS deployment
+   command and sends the exact commit SHA over standard input.
 2. Fetches the exact pushed commit with a repository-scoped, read-only GitHub
    deploy key stored on the Cloudways server.
 3. Builds production Composer dependencies before maintenance mode.
@@ -28,10 +29,11 @@ SSH keys.
 
 ## Server command
 
-The deployment key is restricted in `~/.ssh/authorized_keys` to a fixed copy
-of `scripts/cloudways-server-deploy.sh` stored outside the application
-directory. A separate read-only deploy key grants the server pull access to
-this repository only.
+The deployment key is restricted in Cloudways'
+`~/.openssh/authorized_keys` to a fixed copy of
+`scripts/cloudways-server-deploy.sh` stored outside the application directory.
+A separate read-only deploy key grants the server pull access to this
+repository only.
 
 The command prepares a release, keeps a rollback copy, and then runs:
 
