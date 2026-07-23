@@ -57,7 +57,7 @@ class RenterCrudController extends CrudController
         $this->crud->denyAccess(['list', 'show', 'create', 'update']);
 
         if (Gate::allows('view', Contact::class)) {
-            $this->crud->allowAccess(['show']);
+            $this->crud->allowAccess(['list', 'show']);
         }
 
         if (Gate::allows('create', Contact::class)) {
