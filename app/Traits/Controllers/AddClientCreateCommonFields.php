@@ -2,6 +2,7 @@
 
 namespace App\Traits\Controllers;
 
+use App\Models\CCurrency;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 trait AddClientCreateCommonFields
@@ -162,5 +163,35 @@ trait AddClientCreateCommonFields
         ]);
 
 
+    }
+
+    private function clientBudgetCurrencyField(): array
+    {
+        $currencies = CCurrency::query()
+            ->orderBy('id')
+            ->get()
+            ->filter(fn (CCurrency $currency) => $currency->iso_code !== null);
+
+        $defaultCurrency = $currencies->first(
+            fn (CCurrency $currency) => $currency->iso_code === 'AMD'
+        );
+
+        return [
+            'name' => 'currency_id',
+            'type' => 'select2_from_array',
+            'options' => $currencies
+                ->mapWithKeys(fn (CCurrency $currency) => [
+                    $currency->id => $currency->name_arm
+                        ?: $currency->name_eng
+                        ?: $currency->iso_code,
+                ])
+                ->all(),
+            'default' => $defaultCurrency?->id,
+            'allows_null' => false,
+            'label' => 'Արժույթ',
+            'wrapper' => [
+                'class' => 'form-group col-md-12',
+            ],
+        ];
     }
 }

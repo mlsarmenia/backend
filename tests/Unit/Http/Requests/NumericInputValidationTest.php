@@ -76,6 +76,10 @@ class NumericInputValidationTest extends TestCase
             fn (string $attribute): bool => str_starts_with($attribute, 'client.'),
             ARRAY_FILTER_USE_KEY
         );
+        $rules['client.*.currency_id'] = array_values(array_filter(
+            $rules['client.*.currency_id'],
+            fn (string $rule): bool => ! str_starts_with($rule, 'exists:')
+        ));
 
         $invalid = Validator::make([
             'client' => [[
@@ -96,10 +100,12 @@ class NumericInputValidationTest extends TestCase
             'client.0.area_to',
             'client.0.room_count_from',
             'client.0.room_count_to',
+            'client.0.currency_id',
         ], $invalid->errors()->keys());
 
         $valid = Validator::make([
             'client' => [[
+                'currency_id' => 1,
                 'price_from' => 100000,
                 'price_to' => 200000.50,
                 'area_from' => 40.5,
