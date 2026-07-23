@@ -28,6 +28,12 @@ class ContactRequest extends FormRequest
             'name_arm' => 'required',
             'last_name_arm' => 'required',
             'phone_mobile_1' => 'required|min:5|max:255',
+            'client.*.price_from' => ['nullable', 'numeric', 'min:0'],
+            'client.*.price_to' => ['nullable', 'numeric', 'min:0'],
+            'client.*.area_from' => ['nullable', 'numeric', 'min:0'],
+            'client.*.area_to' => ['nullable', 'numeric', 'min:0'],
+            'client.*.room_count_from' => ['nullable', 'integer', 'min:0'],
+            'client.*.room_count_to' => ['nullable', 'integer', 'min:0'],
         ];
     }
 

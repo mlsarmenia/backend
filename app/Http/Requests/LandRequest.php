@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\ValidatesEstateNumericFields;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class LandRequest extends FormRequest
 {
+    use ValidatesEstateNumericFields;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,7 +28,7 @@ class LandRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        return $this->withEstateNumericRules([
              'contract_type' => 'required',
              'estate_status' => 'required',
              'location_province' => 'required',
@@ -44,7 +47,7 @@ class LandRequest extends FormRequest
                 },
             ]
 
-        ];
+        ]);
     }
 
     /**

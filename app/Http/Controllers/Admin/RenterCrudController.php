@@ -275,7 +275,8 @@ class RenterCrudController extends CrudController
 
                 [
                     'name' => 'price_from',
-                    'type' => "text",
+                    'type' => "number",
+                    'attributes' => ['min' => 0, 'step' => 'any'],
                     'label' => "Գինը սկսած",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -284,7 +285,8 @@ class RenterCrudController extends CrudController
 
                 [
                     'name' => 'price_to',
-                    'type' => "text",
+                    'type' => "number",
+                    'attributes' => ['min' => 0, 'step' => 'any'],
                     'label' => "Գինը մինչև",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -293,7 +295,8 @@ class RenterCrudController extends CrudController
 
                 [
                     'name' => 'area_from',
-                    'type' => "text",
+                    'type' => "number",
+                    'attributes' => ['min' => 0, 'step' => 'any'],
                     'label' => "Մակերեսը սկսած",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -302,7 +305,8 @@ class RenterCrudController extends CrudController
 
                 [
                     'name' => 'area_to',
-                    'type' => "text",
+                    'type' => "number",
+                    'attributes' => ['min' => 0, 'step' => 'any'],
                     'label' => "Մակերեսը մինչև",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -311,7 +315,8 @@ class RenterCrudController extends CrudController
 
                 [
                     'name' => 'room_count_from',
-                    'type' => "text",
+                    'type' => "number",
+                    'attributes' => ['min' => 0, 'step' => 1],
                     'label' => "Սենյակներ սկսած",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -320,7 +325,8 @@ class RenterCrudController extends CrudController
 
                 [
                     'name' => 'room_count_to',
-                    'type' => "text",
+                    'type' => "number",
+                    'attributes' => ['min' => 0, 'step' => 1],
                     'label' => "Սենյակներ մինչև",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'

@@ -3,10 +3,13 @@
 namespace App\Http\Requests;
 
 use App\Enum\ContractType;
+use App\Http\Requests\Concerns\ValidatesEstateNumericFields;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EstateRequest extends FormRequest
 {
+    use ValidatesEstateNumericFields;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,7 +28,7 @@ class EstateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        return $this->withEstateNumericRules([
              'contract_type' => 'required',
              'estate_status' => 'required',
              'seller' => 'required_if:contract_type,1',
@@ -54,7 +57,7 @@ class EstateRequest extends FormRequest
               'archive_till_date' => 'required_if:estate_status,8',
               'archive_comment_arm' => 'required_if:estate_status,8'
 
-        ];
+        ]);
     }
 
     /**
