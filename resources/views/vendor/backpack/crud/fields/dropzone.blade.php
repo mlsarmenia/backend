@@ -85,6 +85,12 @@
     value="{{ $field['value'] }}"
     @include('crud::fields.inc.attributes')
 >
+<input
+    type="hidden"
+    name="{{ $field['name'] }}_main"
+    value="{{ old($field['name'].'_main', '') }}"
+    data-dropzone-main-input
+>
 
 <label>{!! $field['label'] !!}</label>
 
@@ -274,7 +280,8 @@
         function bpFieldInitDropzoneElement(element) {
             const dz = element[0];
             let $dropzoneConfig = JSON.parse(dz.dataset.config);
-            let input = dz.parentNode.querySelector('input[type="hidden"]');
+            let input = dz.parentNode.querySelector('input[bp-field-main-input]');
+            let mainPhotoInput = dz.parentNode.querySelector('[data-dropzone-main-input]');
             let dropzoneHiddenContainer = dz.parentNode.querySelector('div.hidden-container');
             let formOperation = dz.dataset.formOperation;
             // always ensure that the random id starts with a letter, it will break the selector if it starts
@@ -326,11 +333,17 @@
                             e.stopPropagation();
                             if (isDropzoneActive) {
 
-                                var filePath = file.path;
+                                const filePath = file?.path || file?.upload?.filename;
+                                const selectMainButton = function () {
+                                    $(dz).find('.dz-main.text-success').html('<i class="lar la-star"></i>');
+                                    $(dz).find('.dz-main.text-success').removeClass('text-success');
+                                    $(mainButton).addClass('text-success');
+                                    $(mainButton).html('<i class="las la-star"></i>');
+                                };
 
-                                if(!file || !file?.path) {
+                                if (!filePath) {
                                     Swal.fire({
-                                        title: "Պահպանեք գույքը նոր ավելացված նկարն ընտրելու համար",
+                                        title: "Սպասեք մինչև նկարի վերբեռնումն ավարտվի",
                                         icon: "error",
                                         timer: 4000,
                                         buttons: false,
@@ -339,21 +352,17 @@
                                 }
 
                                 if(!file.id) {
-                                    if(!file || !file?.path) {
-                                        Swal.fire({
-                                            title: "Պահպանեք գույքը նոր ավելացված նկարն ընտրելու համար",
-                                            icon: "error",
-                                            timer: 4000,
-                                            buttons: false,
-                                        });
-                                        return false
-                                    }
+                                    mainPhotoInput.value = filePath;
+                                    selectMainButton();
                                 } else {
                                     $.ajax({
                                         url: '/admin/estate/'+file.id+'/set-main-image',
                                         type: 'POST',
                                         success: function(result) {
-                                            if (result !== '1') {
+                                            if (result == 1) {
+                                                mainPhotoInput.value = '';
+                                                selectMainButton();
+                                            } else {
                                                 Swal.fire({
                                                     title: "Something went wrong",
                                                     icon: "error",
@@ -370,10 +379,6 @@
                                 }
 
 
-                                $('.dz-main.text-success').html('<i class="lar la-star"></i>');
-                                $('.dz-main.text-success').removeClass('text-success');
-                                $(this).addClass('text-success');
-                                $(this).html('<i class="las la-star"></i>');
                             }
                         });
 
@@ -513,6 +518,7 @@
                     files.forEach(function (file, index) {
                         file.previewElement.style.visibility = 'visible';
                         file.upload.filename = response.files[index];
+                        file.path = response.files[index];
                         let uploadedFileNameContainer = file.previewElement.querySelector('[data-dz-name]');
                         uploadedFileNameContainer.innerHTML = response.files[index];
                     });
@@ -557,6 +563,11 @@
                 let tempUploadFolderName = dz.dataset.tempUploadFolderName;
                 let inputFiles = input.value;
                 let files = inputFiles ? JSON.parse(inputFiles) : [];
+                const removedPath = file?.path || file?.upload?.filename;
+
+                if (mainPhotoInput.value === removedPath) {
+                    mainPhotoInput.value = '';
+                }
 
                 if (!filePath.path && filePath.includes(tempUploadFolderName)) {
 
@@ -610,6 +621,7 @@
                 }).then((value) => {
                     if (value.isConfirmed) {
                         dropzone.removeAllFiles();
+                        mainPhotoInput.value = '';
                         const parentId = deleteAllButton.getAttribute('data-id');
                         $('.dz-preview').empty();
                         if(parentId) {
