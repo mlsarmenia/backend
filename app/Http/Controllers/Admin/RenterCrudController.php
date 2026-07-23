@@ -398,7 +398,7 @@ class RenterCrudController extends CrudController
             'query' => function ($model) {
                 $search = request()->input('q') ?? false;
                 if ($search) {
-                    return $model->where('contact_type_id', '=', 3)->whereRaw('CONCAT(`name_arm`," ",`last_name_arm`) LIKE "%' . $search . '%"');
+                    return $model->where('contact_type_id', '=', 3)->whereRaw('CONCAT_WS(" ", `name_arm`, `last_name_arm`) LIKE ?', ['%' . $search . '%']);
                 } else {
                     return $model->where('contact_type_id', '=', 3);
                 }
@@ -415,7 +415,7 @@ class RenterCrudController extends CrudController
             'query' => function ($model) {
                 $search = request()->input('q') ?? false;
                 if ($search) {
-                    return $model->where('contact_type_id', '=', 3)->whereRaw('CONCAT(`name_eng`," ",`last_name_eng`," ",`name_arm`," ",`last_name_arm`," ",`id`) LIKE "%' . $search . '%"');
+                    return $model->where('contact_type_id', '=', 3)->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`, `id`) LIKE ?', ['%' . $search . '%']);
                 } else {
                     return $model->where('contact_type_id', '=', 3);
                 }
@@ -436,7 +436,7 @@ class RenterCrudController extends CrudController
 
                 $search = request()->input('q') ?? false;
                 if ($search) {
-                    return $model->where('parent_id', '=', $provinceId)->whereRaw('CONCAT(`name_eng`," ",`name_arm`) LIKE "%' . $search . '%"');
+                    return $model->where('parent_id', '=', $provinceId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } else {
                     return $model->where('parent_id', '=', $provinceId);
                 }
@@ -456,7 +456,7 @@ class RenterCrudController extends CrudController
                 $provinceId = $params['client[0][location_province]'] ?? null;
                 $search = request()->input('q') ?? false;
                 if ($search) {
-                    return $model->where('parent_id', '=', $provinceId)->whereRaw('CONCAT(`name_eng`," ",`name_arm`) LIKE "%' . $search . '%"');
+                    return $model->where('parent_id', '=', $provinceId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } else {
                     return $model->where('parent_id', '=', $provinceId);
                 }
@@ -477,9 +477,9 @@ class RenterCrudController extends CrudController
                 $communityId = $params['location_community'];
                 $search = request()->input('q') ?? false;
                 if ($search && $communityId) {
-                    return $model->where('parent_is_community', true)->where('community_id', '=', $communityId)->whereRaw('CONCAT(`name_eng`," ",`name_arm`) LIKE "%' . $search . '%"');
+                    return $model->where('parent_is_community', true)->where('community_id', '=', $communityId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } elseif ($search && $cityId) {
-                    return $model->where('parent_is_community', false)->where('parent_id', '=', $cityId)->whereRaw('CONCAT(`name_eng`," ",`name_arm`) LIKE "%' . $search . '%"');
+                    return $model->where('parent_is_community', false)->where('parent_id', '=', $cityId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } elseif ($communityId) {
                     return $model->where('parent_is_community', true)->where('community_id', '=', $communityId);
                 } elseif ($cityId) {

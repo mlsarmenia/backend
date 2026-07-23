@@ -619,9 +619,13 @@ trait HasEstateFilters
 
                 $this->crud->addClause('where', function ($query) use ($value, $searchWithSpaces) {
                     $query->whereHas('seller', function ($subquery) use ($value, $searchWithSpaces) {
-                        $subquery->whereRaw('CONCAT(`name_eng`," ",`last_name_eng`," ",`name_arm`," ",`last_name_arm`, REPLACE(`phone_mobile_1`, " ", "")) LIKE ?', '%' . $searchWithSpaces . '%');
+                        $subquery
+                            ->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`) LIKE ?', ['%' . $value . '%'])
+                            ->orWhereRaw('REPLACE(`phone_mobile_1`, " ", "") LIKE ?', ['%' . $searchWithSpaces . '%']);
                     })->orWhereHas('sellerRenter', function ($subquery) use ($value, $searchWithSpaces) {
-                        $subquery->whereRaw('CONCAT(`name_eng`," ",`last_name_eng`," ",`name_arm`," ",`last_name_arm`, REPLACE(`phone_mobile_1`, " ", "")) LIKE ?', '%' . $searchWithSpaces . '%');
+                        $subquery
+                            ->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`) LIKE ?', ['%' . $value . '%'])
+                            ->orWhereRaw('REPLACE(`phone_mobile_1`, " ", "") LIKE ?', ['%' . $searchWithSpaces . '%']);
                     });
                 });
             });

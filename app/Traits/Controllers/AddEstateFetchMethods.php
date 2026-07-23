@@ -23,7 +23,7 @@ trait AddEstateFetchMethods
                     return $model->whereHas('contact', function ($query) use($search) {
                         $query->where('contact_type_id', 3)
                             ->whereNotNull('name_arm')
-                            ->whereRaw('CONCAT(`name_eng`," ",`last_name_eng`," ",`name_arm`," ",`last_name_arm`," ",`id`) LIKE "%' . $search . '%"');
+                            ->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`, `id`) LIKE ?', ['%' . $search . '%']);
                     })
                         ->whereHas('roles', function ($query) {
                             $query->whereIn('role_id', [3,4, 6, 7, 8]);
@@ -55,7 +55,9 @@ trait AddEstateFetchMethods
                 if ($search) {
                     return $model->where('contact_type_id', 1)->where(function ($query) use ($search) {
                         $searchWithSpaces = str_replace(' ', '', $search);
-                        $query->whereRaw('CONCAT(`name_eng`, " ", `last_name_eng`, " ", `name_arm`, " ", `last_name_arm`, " ", `id`, " ", REPLACE(`phone_mobile_1`, " ", "")) LIKE ?', ["%$searchWithSpaces%"]);
+                        $query
+                            ->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`, `id`) LIKE ?', ['%' . $search . '%'])
+                            ->orWhereRaw('REPLACE(`phone_mobile_1`, " ", "") LIKE ?', ['%' . $searchWithSpaces . '%']);
                     });
                 } else {
                     return $model->where('contact_type_id', 1);
@@ -75,7 +77,9 @@ trait AddEstateFetchMethods
                 if ($search) {
                     return $model->where('contact_type_id', 4)->where(function ($query) use ($search) {
                         $searchWithSpaces = str_replace(' ', '', $search);
-                        $query->whereRaw('CONCAT(`name_eng`, " ", `last_name_eng`, " ", `name_arm`, " ", `last_name_arm`, " ", `id`, " ", REPLACE(`phone_mobile_1`, " ", "")) LIKE ?', ["%$searchWithSpaces%"]);
+                        $query
+                            ->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`, `id`) LIKE ?', ['%' . $search . '%'])
+                            ->orWhereRaw('REPLACE(`phone_mobile_1`, " ", "") LIKE ?', ['%' . $searchWithSpaces . '%']);
                     });
                 } else {
                     return $model->where('contact_type_id', 4);
@@ -96,7 +100,9 @@ trait AddEstateFetchMethods
                 if ($search) {
                     return $model->where('contact_type_id', 2)->where(function ($query) use ($search) {
                         $searchWithSpaces = str_replace(' ', '', $search);
-                        $query->whereRaw('CONCAT(`name_eng`, " ", `last_name_eng`, " ", `name_arm`, " ", `last_name_arm`, " ", `id`, " ", REPLACE(`phone_mobile_1`, " ", "")) LIKE ?', ["%$searchWithSpaces%"]);
+                        $query
+                            ->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`, `id`) LIKE ?', ['%' . $search . '%'])
+                            ->orWhereRaw('REPLACE(`phone_mobile_1`, " ", "") LIKE ?', ['%' . $searchWithSpaces . '%']);
                     });
                 } else {
                     return $model->where('contact_type_id', 2);
@@ -115,7 +121,7 @@ trait AddEstateFetchMethods
             'query' => function ($model) {
                 $search = request()->input('q') ?? false;
                 if ($search) {
-                    return $model->where('contact_type_id', '=', 3)->whereRaw('CONCAT(`name_arm`," ",`last_name_arm`) LIKE "%' . $search . '%"');
+                    return $model->where('contact_type_id', '=', 3)->whereRaw('CONCAT_WS(" ", `name_arm`, `last_name_arm`) LIKE ?', ['%' . $search . '%']);
                 } else {
                     return $model->where('contact_type_id', '=', 3);
                 }
@@ -136,7 +142,7 @@ trait AddEstateFetchMethods
                 if ($search) {
                     return $model->with('contact')
                         ->whereHas('contact', function (Builder $query) use ($search) {
-                            $query->whereRaw('CONCAT(`name_arm`," ",`last_name_arm`) LIKE "%' . $search . '%"');
+                            $query->whereRaw('CONCAT_WS(" ", `name_arm`, `last_name_arm`) LIKE ?', ['%' . $search . '%']);
                         });
                 } else {
                     return $model->with('contact')->whereHas('roles', function (Builder $query) {
@@ -160,7 +166,7 @@ trait AddEstateFetchMethods
 
                 $search = request()->input('q') ?? false;
                 if ($search) {
-                    return $model->where('parent_id', '=', $provinceId)->whereRaw('CONCAT(`name_eng`," ",`name_arm`) LIKE "%' . $search . '%"');
+                    return $model->where('parent_id', '=', $provinceId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } else {
                     return $model->where('parent_id', '=', $provinceId);
                 }
@@ -180,7 +186,7 @@ trait AddEstateFetchMethods
                 $provinceId = $params['location_province'];
                 $search = request()->input('q') ?? false;
                 if ($search) {
-                    return $model->where('parent_id', '=', $provinceId)->whereRaw('CONCAT(`name_eng`," ",`name_arm`) LIKE "%' . $search . '%"');
+                    return $model->where('parent_id', '=', $provinceId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } else {
                     return $model->where('parent_id', '=', $provinceId);
                 }
@@ -197,7 +203,7 @@ trait AddEstateFetchMethods
             'query' => function ($model) {
                 $search = request()->input('q') ?? false;
                 if ($search) {
-                    return $model->whereIn('contact_type_id', [4,5])->whereRaw('CONCAT(`name_eng`," ",`last_name_eng`," ",`name_arm`," ",`last_name_arm`," ",`id`) LIKE "%' . $search . '%"');
+                    return $model->whereIn('contact_type_id', [4,5])->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`, `id`) LIKE ?', ['%' . $search . '%']);
                 } else {
                     return $model->whereIn('contact_type_id', [4,5]);
                 }
@@ -218,19 +224,13 @@ trait AddEstateFetchMethods
                 $communityId = $params['location_community'];
                 $search = request()->input('q') ?? false;
                 if ($search && $communityId) {
-                    $searchQuery = 'CONCAT(COALESCE(`name_eng`, ""), " ", COALESCE(`name_arm`, "")) LIKE "%';
-                    $searchQuery .= $search . '%"';
-
                     return $model->where('parent_is_community', true)
                         ->where('community_id', '=', $communityId)
-                        ->whereRaw($searchQuery);
+                        ->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } elseif ($search && $cityId) {
-                    $searchQuery = 'CONCAT(COALESCE(`name_eng`, ""), " ", COALESCE(`name_arm`, "")) LIKE "%';
-                    $searchQuery .= $search . '%"';
-
                     return $model->where('parent_is_community', false)
                         ->where('city_id', '=', $cityId)
-                        ->whereRaw($searchQuery);
+                        ->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } elseif ($communityId) {
                     return $model->where('parent_is_community', true)->where('community_id', '=', $communityId);
                 } elseif ($cityId) {
