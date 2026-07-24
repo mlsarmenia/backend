@@ -45,6 +45,23 @@ class EstateMainImageServiceTest extends TestCase
         $this->assertSame('42/existing.jpg', $estate->main_image_file_path_thumb);
     }
 
+    public function test_selection_survives_uploader_path_normalization(): void
+    {
+        $estate = new Estate;
+        $estate->id = 42;
+
+        $applied = (new EstateMainImageService)->applyDeferredSelection(
+            $estate,
+            ['uploads/tmp//front.jpg', 'uploads/tmp//kitchen.jpg'],
+            'uploads/tmp/kitchen.jpg'
+        );
+
+        $this->assertTrue($applied);
+        $this->assertSame('kitchen.jpg', $estate->main_image_file_name);
+        $this->assertSame('42/kitchen.jpg', $estate->main_image_file_path);
+        $this->assertSame('42/kitchen.jpg', $estate->main_image_file_path_thumb);
+    }
+
     public function test_malformed_selection_is_ignored(): void
     {
         $estate = new Estate;
