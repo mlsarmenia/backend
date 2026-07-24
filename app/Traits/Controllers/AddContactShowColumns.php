@@ -249,8 +249,8 @@ trait AddContactShowColumns
         ]);
 
         CRUD::addColumn([
-            'name' => 'client.infoSource.contact.fullName',
-            'attribute' => 'name_arm',
+            'name' => 'client.infoSource',
+            'attribute' => 'name',
             'type' => "relationship",
             'limit' => 5000,
             'label' => "Ինֆորմացիայի աղբյուր",
