@@ -1,5 +1,7 @@
 @php
-    use App\Models\Estate;if(!isset($entry)){
+    use App\Services\PotentialEstateMatcher;
+
+    if(!isset($entry)){
         return;
     }
     if(isset($widget['visible']) && is_callable($widget['visible'])){
@@ -65,75 +67,7 @@
 
 
 
- $search_query = Estate::where('id', '>', 0 )->whereIn('estate_status_id', [1, 2,3,4])->orderBy('created_at', 'desc');
-
-if ($client->estate_type_id) {
-    $search_query->where('estate_type_id', $client->estate_type_id);
-}
-
-if ($client->contract_type_id) {
-    $search_query->where('contract_type_id', $client->contract_type_id);
-}
-
-if ($client->area_from) {
-    $search_query->where('area_total', '>=', $client->area_from);
-}
-
-if ($client->area_to) {
-    $search_query->where('area_total', '<=', $client->area_to);
-}
-
-if ($client->location_province_id) {
-    $search_query->where('location_province_id', $client->location_province_id);
-}
-
-//if ($client->location_city_id) {
-//    $search_query->where('location_city_id', $client->location_city_id);  // Note: corrected 'location_province_id' to 'location_city_id'
-//}
-
-if ($client->communities) {
-    $communities = $client->communities->pluck('id')->all();
-
-
-    if(count($communities) > 0) {
-    $search_query->whereIn('location_community_id', $communities);
-    }
-}
-
-if ($client->price_from) {
-    $search_query->where('price_amd', '>=', $client->price_from * 370);
-}
-
-if ($client->price_to) {
-    $search_query->where('price_amd', '<=', $client->price_to * 400);
-}
-
-if ($client->room_count_from) {
-    $search_query->where('room_count', '>=', $client->room_count_from);
-}
-
-if ($client->room_count_to) {
-    $search_query->where('room_count', '<=', $client->room_count_to);
-}
-
-
-    $client_repairing_types = $client->client_repairing_types->pluck('id')->toArray();
-    $client_building_types = $client->client_building_types->pluck('id')->toArray();
-    $client_building_project__types = $client->client_building_project__types->pluck('id')->toArray();
-
-if (count($client_repairing_types) > 0) {
-       $search_query->whereIn('repairing_type_id',  $client_repairing_types);
-}
-
-if (count($client_building_project__types) > 0) {
-    $search_query->whereIn('building_project_type_id', $client_building_project__types);
-}
-
-if (count($client_building_types) > 0) {
-    $search_query->whereIn('building_type_id',  $client_building_types);
-}
-
-
+    $search_query = app(PotentialEstateMatcher::class)->forClient($client);
 
     if(is_callable($widget['search']) && isset($_GET[$searchName])){
         $query = $widget['search']($query, $_GET[$searchName]);
