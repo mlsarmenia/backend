@@ -8,13 +8,18 @@ class EstateMainImageService
 {
     public function applyDeferredSelection(Estate $estate, array $photos, mixed $selectedPhoto): bool
     {
-        if (! is_string($selectedPhoto) || ! in_array($selectedPhoto, $photos, true)) {
+        if (! is_string($selectedPhoto)) {
             return false;
         }
 
         $filename = basename($selectedPhoto);
 
-        if ($filename === '') {
+        $submittedFilenames = array_map(
+            static fn (mixed $photo): ?string => is_string($photo) ? basename($photo) : null,
+            $photos
+        );
+
+        if ($filename === '' || ! in_array($filename, $submittedFilenames, true)) {
             return false;
         }
 
