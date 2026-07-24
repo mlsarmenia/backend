@@ -2,12 +2,19 @@
 
 namespace App\Providers;
 
+use App\Listeners\Notifications\RecordNotificationFailed;
+use App\Listeners\Notifications\RecordNotificationSending;
+use App\Listeners\Notifications\RecordNotificationSent;
+use App\Models\Client;
 use App\Models\Estate;
+use App\Observers\ClientObserver;
 use App\Observers\EstateObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Notifications\Events\NotificationFailed;
+use Illuminate\Notifications\Events\NotificationSending;
+use Illuminate\Notifications\Events\NotificationSent;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -20,6 +27,15 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        NotificationSending::class => [
+            RecordNotificationSending::class,
+        ],
+        NotificationSent::class => [
+            RecordNotificationSent::class,
+        ],
+        NotificationFailed::class => [
+            RecordNotificationFailed::class,
+        ],
     ];
 
     /**
@@ -29,6 +45,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Client::observe(ClientObserver::class);
         Estate::observe(EstateObserver::class);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Events\EstateCreated;
 use App\Models\Estate;
 use App\Models\EstateDocument;
 use App\Services\CurrencyRateService;
@@ -255,7 +256,6 @@ class EstateObserver
 
 
 
-        $estate->unsetEventDispatcher();
         $estate->temporary_photos = json_encode($temporaryPhotos);
 
         if ($estate->is_public_text_generation) {
@@ -271,6 +271,9 @@ class EstateObserver
 
         $estate->saveQuietly();
 
+        if ($estate->wasRecentlyCreated) {
+            EstateCreated::dispatch($estate);
+        }
     }
 
 

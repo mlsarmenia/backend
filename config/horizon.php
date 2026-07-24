@@ -167,7 +167,7 @@ return [
     'defaults' => [
         'supervisor-default' => [
             'connection' => 'redis',
-            'queue' => ['default'],
+            'queue' => ['default', 'notifications'],
             'balance' => 'simple',
             'maxProcesses' => 5,
             'maxTime' => 1800,
@@ -181,10 +181,19 @@ return [
     ],
 
     'environments' => [
+        'production' => [
+            'supervisor-default' => [
+                'connection' => 'redis',
+                'queue' => ['default', 'notifications'],
+                'balance' => 'auto',
+                'maxProcesses' => 5,
+            ],
+        ],
+
         'local' => [
             'supervisor-default' => [
                 'connection' => 'redis',
-                'queue' => ['default'],
+                'queue' => ['default', 'notifications'],
                 'balance' => 'simple',
                 'maxProcesses' => 50,
                 'maxTime' => 1800,
