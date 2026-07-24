@@ -95,7 +95,7 @@ class CCurrency extends Model
             $this->name_ar,
         ])));
 
-        if ($this->id === 1 || Str::contains($description, ['AMD', 'DRAM', 'ԴՐԱՄ', 'ДРАМ'])) {
+        if (Str::contains($description, ['AMD', 'DRAM', 'ԴՐԱՄ', 'ДРАМ'])) {
             return 'AMD';
         }
 

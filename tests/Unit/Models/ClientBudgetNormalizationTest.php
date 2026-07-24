@@ -26,10 +26,10 @@ class ClientBudgetNormalizationTest extends TestCase
     public function test_foreign_currency_budgets_are_converted_to_amd(): void
     {
         $currency = new CCurrency(['name_eng' => 'US Dollar']);
-        $currency->id = 2;
+        $currency->id = 1;
 
         $client = new Client([
-            'currency_id' => 2,
+            'currency_id' => 1,
             'price_from' => 100_000,
             'price_to' => 150_000,
         ]);
@@ -64,9 +64,10 @@ class ClientBudgetNormalizationTest extends TestCase
     public function test_currency_names_resolve_to_supported_iso_codes(): void
     {
         $amd = new CCurrency(['name_eng' => 'Armenian Dram']);
-        $amd->id = 1;
+        $amd->id = 3;
 
-        $usd = new CCurrency(['name_arm' => 'ԱՄՆ դոլար']);
+        $usd = new CCurrency(['name_eng' => 'US Dollar']);
+        $usd->id = 1;
         $rub = new CCurrency(['name_ru' => 'Российский рубль']);
         $unsupported = new CCurrency(['name_eng' => 'Euro']);
 
