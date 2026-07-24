@@ -34,6 +34,12 @@ class ContactRequest extends FormRequest
             'client.*.area_to' => ['nullable', 'numeric', 'min:0'],
             'client.*.room_count_from' => ['nullable', 'integer', 'min:0'],
             'client.*.room_count_to' => ['nullable', 'integer', 'min:0'],
+            'client.*.currency_id' => [
+                'nullable',
+                'required_with:client.*.price_from,client.*.price_to',
+                'integer',
+                'exists:c_currency,id',
+            ],
         ];
     }
 

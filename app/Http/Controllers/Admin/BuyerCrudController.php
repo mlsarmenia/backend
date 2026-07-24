@@ -282,6 +282,8 @@ class BuyerCrudController extends CrudController
                     ],
                 ],
 
+                $this->clientBudgetCurrencyField(),
+
                 [
                     'name' => 'price_from',
                     'type' => "number",

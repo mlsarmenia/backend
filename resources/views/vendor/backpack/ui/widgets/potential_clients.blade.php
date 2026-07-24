@@ -1,5 +1,5 @@
 @php
-    use App\Models\Client;use App\Models\Contact;
+    use App\Services\PotentialClientMatcher;
 
     if(!isset($entry)){
         return;
@@ -63,77 +63,7 @@
 
     $query = $entry->{$widget['name']}();
 
-    $estate = $entry;
-
-//    dd($client);
-
-
- $client_query = Client::where('id', '>', 0);
-
-$contact_query = Contact::query()->whereIn('contact_type_id', [4,5])->with('client');
-
-$contact_query->whereHas('client', function ($query) use ($estate) {
-    if ($estate->estate_type_id) {
-        $query->where('estate_type_id', $estate->estate_type_id);
-    }
-
-    if ($estate->contract_type_id) {
-        $query->where('estate_contract_type_id', $estate->contract_type_id);
-    }
-
-    if ($estate->area_total) {
-        $query->where(function ($subQuery) use ($estate) {
-            $subQuery->where('area_from', '<=', $estate->area_total)
-                     ->where('area_to', '>=', $estate->area_total);
-        });
-    }
-
-    if ($estate->location_province_id) {
-        $query->where('location_province_id', $estate->location_province_id);
-    }
-
-    if ($estate->location_city_id) {
-        $query->where('location_city_id', $estate->location_city_id);
-    }
-
-    if ($estate->location_community_id) {
-        $query->whereHas('communities', function ($subQuery) use ($estate) {
-            $subQuery->where('client_community.community_id', $estate->location_community_id);
-        });
-    }
-
-    if ($estate->price_amd) {
-        $query->where(function ($subQuery) use ($estate) {
-            $subQuery->where('price_from', '<=', $estate->price_amd / 400)
-                     ->where('price_to', '>=', $estate->price_amd / 370);
-        });
-    }
-
-    if ($estate->room_count) {
-        $query->where(function ($subQuery) use ($estate) {
-            $subQuery->where('room_count_from', '<=', $estate->room_count)
-                     ->where('room_count_to', '>=', $estate->room_count);
-        });
-    }
-
-    if ($estate->repairing_type_id) {
-        $query->whereHas('client_repairing_types', function ($subQuery) use ($estate) {
-            $subQuery->where('client_repairing_type.repairing_type_id', $estate->repairing_type_id);
-        });
-    }
-
-    if ($estate->building_project_type_id) {
-        $query->whereHas('client_building_project__types', function ($subQuery) use ($estate) {
-            $subQuery->where('client_building_project_type.building_project_type_id', $estate->building_project_type_id);
-        });
-    }
-
-    if ($estate->building_type_id) {
-        $query->whereHas('client_building_types', function ($subQuery) use ($estate) {
-            $subQuery->where('client_building_type.building_type_id', $estate->building_type_id);
-        });
-    }
-});
+    $contact_query = app(PotentialClientMatcher::class)->forEstate($entry);
 
 
     if(is_callable($widget['search']) && isset($_GET[$searchName])){

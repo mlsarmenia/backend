@@ -11,6 +11,7 @@ use App\Traits\ApiMultiLanguage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * Class CCurrency
@@ -83,4 +84,29 @@ class CCurrency extends Model
 	{
 		return $this->hasMany(Estate::class, 'currency_id');
 	}
+
+    public function getIsoCodeAttribute(): ?string
+    {
+        $description = Str::upper(implode(' ', array_filter([
+            $this->sort_id,
+            $this->name_eng,
+            $this->name_arm,
+            $this->name_ru,
+            $this->name_ar,
+        ])));
+
+        if ($this->id === 1 || Str::contains($description, ['AMD', 'DRAM', 'ԴՐԱՄ', 'ДРАМ'])) {
+            return 'AMD';
+        }
+
+        if (Str::contains($description, ['USD', 'DOLLAR', 'ԴՈԼԱՐ', 'ДОЛЛАР'])) {
+            return 'USD';
+        }
+
+        if (Str::contains($description, ['RUB', 'RUBLE', 'ROUBLE', 'ՌՈՒԲԼ', 'РУБЛ'])) {
+            return 'RUB';
+        }
+
+        return null;
+    }
 }

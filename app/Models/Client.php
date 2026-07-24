@@ -6,11 +6,14 @@
 
 namespace App\Models;
 
+use App\Services\CurrencyRateService;
 use App\Traits\ApiMultiLanguage;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\App;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class Client
@@ -27,8 +30,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $currency_id
  * @property float|null $price_from
  * @property float|null $price_from_usd
+ * @property float|null $price_from_amd
  * @property float|null $price_to
  * @property float|null $price_to_usd
+ * @property float|null $price_to_amd
  * @property float|null $area_from
  * @property float|null $area_to
  * @property int|null $room_count_from
@@ -73,8 +78,10 @@ class Client extends Model
 		'currency_id' => 'int',
 		'price_from' => 'float',
 		'price_from_usd' => 'float',
+		'price_from_amd' => 'float',
 		'price_to' => 'float',
 		'price_to_usd' => 'float',
+		'price_to_amd' => 'float',
 		'area_from' => 'float',
 		'area_to' => 'float',
 		'room_count_from' => 'int',
@@ -106,8 +113,10 @@ class Client extends Model
 		'currency_id',
 		'price_from',
 		'price_from_usd',
+		'price_from_amd',
 		'price_to',
 		'price_to_usd',
+		'price_to_amd',
 		'area_from',
 		'area_to',
 		'room_count_from',
@@ -241,6 +250,11 @@ class Client extends Model
         return $this->belongsTo(CContractType::class, 'estate_contract_type_id');
     }
 
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(CCurrency::class, 'currency_id');
+    }
+
     public function getClientContractTypeRentsAttribute()
     {
         return $this->contract_type()->where('id', '!=', 1)->first();
@@ -310,6 +324,12 @@ class Client extends Model
     {
         parent::boot();
 
+        static::saving(function (Client $client) {
+            if (! $client->exists || $client->isDirty(['currency_id', 'price_from', 'price_to'])) {
+                $client->normalizeBudgetToAmd(App::make(CurrencyRateService::class));
+            }
+        });
+
         static::saved(function ($client) {
             if ($client->contact) {
                 $client->contact_type_id = $client->contact->contact_type_id;
@@ -319,5 +339,40 @@ class Client extends Model
                 $client->saveQuietly();
             }
         });
+    }
+
+    public function normalizeBudgetToAmd(CurrencyRateService $rateService): void
+    {
+        $iso = 'AMD';
+
+        if ($this->currency_id !== null) {
+            $currency = $this->relationLoaded('currency')
+                && $this->currency?->getKey() === $this->currency_id
+                    ? $this->currency
+                    : $this->currency()->first();
+            $iso = $currency?->iso_code;
+
+            if ($iso === null) {
+                throw ValidationException::withMessages([
+                    'currency_id' => 'The selected budget currency is not supported.',
+                ]);
+            }
+        }
+
+        $rate = $iso === 'AMD' ? 1.0 : $rateService->getRate($iso);
+
+        if ($rate === null || $rate <= 0) {
+            throw ValidationException::withMessages([
+                'currency_id' => "The {$iso} exchange rate is not available.",
+            ]);
+        }
+
+        $this->price_from_amd = $this->toAmd($this->price_from, $rate);
+        $this->price_to_amd = $this->toAmd($this->price_to, $rate);
+    }
+
+    private function toAmd(?float $amount, float $rate): ?float
+    {
+        return $amount === null ? null : round($amount * $rate, 3);
     }
 }
