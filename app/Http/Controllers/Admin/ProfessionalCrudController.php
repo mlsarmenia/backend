@@ -192,8 +192,7 @@ class ProfessionalCrudController extends CrudController
             },
             'searchLogic' => function ($query, $column, $searchTerm) {
                 $query->orWhereHas('contact', function ($q) use ($column, $searchTerm) {
-                    $exp = "CONCAT(TRIM(name_arm), ' ', TRIM(last_name_arm), ' ', TRIM(phone_mobile_1), ' ',";
-                    $exp .= " COALESCE(phone_mobile_2, ''))";
+                    $exp = "CONCAT_WS(' ', TRIM(name_arm), TRIM(last_name_arm), TRIM(phone_mobile_1), TRIM(phone_mobile_2))";
                     $q->where(DB::raw($exp), 'LIKE', "%" . $searchTerm . "%");
                 });
             },
@@ -261,7 +260,7 @@ class ProfessionalCrudController extends CrudController
             'query' => function ($model) {
                 $search = request()->input('q') ?? false;
                 if ($search) {
-                    return $model->whereIn('contact_type_id', [3])->whereRaw('CONCAT(`name_eng`," ",`last_name_eng`," ",`name_arm`," ",`last_name_arm`," ",`id`) LIKE "%' . $search . '%"');
+                    return $model->whereIn('contact_type_id', [3])->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`, `id`) LIKE ?', ['%' . $search . '%']);
                 } else {
                     return $model->whereIn('contact_type_id', [3]);
                 }

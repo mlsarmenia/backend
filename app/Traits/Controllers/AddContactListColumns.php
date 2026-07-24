@@ -48,7 +48,7 @@ trait AddContactListColumns
             'limit' => 100,
             'orderable'  => true,
             'searchLogic' => function ($query, $column, $searchTerm) {
-                $exp = "CONCAT(TRIM(name_arm), ' ', TRIM(last_name_arm), ' ', TRIM(phone_mobile_1))";
+                $exp = "CONCAT_WS(' ', TRIM(name_arm), TRIM(last_name_arm), TRIM(phone_mobile_1))";
                 return $query->orWhereRaw($exp . " LIKE '%$searchTerm%'");
             }
         ]);

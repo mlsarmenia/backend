@@ -261,7 +261,7 @@ class UserCrudController extends CrudController
                     return $model->whereHas('contact', function ($query) use($search) {
                         $query->where('contact_type_id', 3)
                             ->whereNotNull('name_arm')
-                            ->whereRaw('CONCAT(`name_eng`," ",`last_name_eng`," ",`name_arm`," ",`last_name_arm`," ",`id`) LIKE "%' . $search . '%"');
+                            ->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`, `id`) LIKE ?', ['%' . $search . '%']);
                     })
                         ->whereHas('roles', function ($query) {
                             $query->whereIn('role_id', [3,4, 6, 7, 8]);

@@ -284,7 +284,8 @@ class BuyerCrudController extends CrudController
 
                 [
                     'name' => 'price_from',
-                    'type' => "text",
+                    'type' => "number",
+                    'attributes' => ['min' => 0, 'step' => 'any'],
                     'label' => "Գինը սկսած",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -293,7 +294,8 @@ class BuyerCrudController extends CrudController
 
                 [
                     'name' => 'price_to',
-                    'type' => "text",
+                    'type' => "number",
+                    'attributes' => ['min' => 0, 'step' => 'any'],
                     'label' => "Գինը մինչև",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -302,7 +304,8 @@ class BuyerCrudController extends CrudController
 
                 [
                     'name' => 'area_from',
-                    'type' => "text",
+                    'type' => "number",
+                    'attributes' => ['min' => 0, 'step' => 'any'],
                     'label' => "Մակերեսը սկսած",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -311,7 +314,8 @@ class BuyerCrudController extends CrudController
 
                 [
                     'name' => 'area_to',
-                    'type' => "text",
+                    'type' => "number",
+                    'attributes' => ['min' => 0, 'step' => 'any'],
                     'label' => "Մակերեսը մինչև",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -320,7 +324,8 @@ class BuyerCrudController extends CrudController
 
                 [
                     'name' => 'room_count_from',
-                    'type' => "text",
+                    'type' => "number",
+                    'attributes' => ['min' => 0, 'step' => 1],
                     'label' => "Սենյակներ սկսած",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -329,7 +334,8 @@ class BuyerCrudController extends CrudController
 
                 [
                     'name' => 'room_count_to',
-                    'type' => "text",
+                    'type' => "number",
+                    'attributes' => ['min' => 0, 'step' => 1],
                     'label' => "Սենյակներ մինչև",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -413,7 +419,7 @@ class BuyerCrudController extends CrudController
                 $search = request()->input('q') ?? false;
                 if ($search) {
                     return $model->whereHas('contact', function (Builder $query) use($search) {
-                        $query->whereNotNull(['name_arm'])->whereRaw('CONCAT(`name_arm`," ",`last_name_arm`) LIKE "%' . $search . '%"');
+                        $query->whereNotNull(['name_arm'])->whereRaw('CONCAT_WS(" ", `name_arm`, `last_name_arm`) LIKE ?', ['%' . $search . '%']);
                     })->with('contact');
                 } else {
                     return $model->whereHas('contact', function (Builder $query) {
@@ -436,7 +442,7 @@ class BuyerCrudController extends CrudController
                     return $model->whereHas('contact', function ($query) use($search) {
                         $query->where('contact_type_id', 3)
                             ->whereNotNull('name_arm')
-                            ->whereRaw('CONCAT(`name_eng`," ",`last_name_eng`," ",`name_arm`," ",`last_name_arm`," ",`id`) LIKE "%' . $search . '%"');
+                            ->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`, `id`) LIKE ?', ['%' . $search . '%']);
                     })
                         ->whereHas('roles', function ($query) {
                             $query->whereIn('role_id', [4, 6, 7, 8]);
@@ -469,7 +475,7 @@ class BuyerCrudController extends CrudController
 
                 $search = request()->input('q') ?? false;
                 if ($search) {
-                    return $model->where('parent_id', '=', $provinceId)->whereRaw('CONCAT(`name_eng`," ",`name_arm`) LIKE "%' . $search . '%"');
+                    return $model->where('parent_id', '=', $provinceId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } else {
                     return $model->where('parent_id', '=', $provinceId);
                 }
@@ -489,7 +495,7 @@ class BuyerCrudController extends CrudController
                 $provinceId = $params['client[0][location_province]'] ?? null;
                 $search = request()->input('q') ?? false;
                 if ($search) {
-                    return $model->where('parent_id', '=', $provinceId)->whereRaw('CONCAT(`name_eng`," ",`name_arm`) LIKE "%' . $search . '%"');
+                    return $model->where('parent_id', '=', $provinceId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } else {
                     return $model->where('parent_id', '=', $provinceId);
                 }
@@ -511,9 +517,9 @@ class BuyerCrudController extends CrudController
                 $search = request()->input('q') ?? false;
 
                 if ($search && $communityId) {
-                    return $model->where('parent_is_community', true)->where('community_id', '=', $communityId)->whereRaw('CONCAT(`name_eng`," ",`name_arm`) LIKE "%' . $search . '%"');
+                    return $model->where('parent_is_community', true)->where('community_id', '=', $communityId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } elseif ($search && $cityId) {
-                    return $model->where('parent_is_community', false)->where('parent_id', '=', $cityId)->whereRaw('CONCAT(`name_eng`," ",`name_arm`) LIKE "%' . $search . '%"');
+                    return $model->where('parent_is_community', false)->where('parent_id', '=', $cityId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } elseif ($communityId) {
                     return $model->where('parent_is_community', true)->where('community_id', '=', $communityId);
                 } elseif ($cityId) {

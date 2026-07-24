@@ -188,7 +188,7 @@ class EstateRentContractCrudController extends CrudController
                     return $model->whereHas('contact', function ($query) use($search) {
                         $query->where('contact_type_id', 3)
                             ->whereNotNull('name_arm')
-                            ->whereRaw('CONCAT(`name_eng`," ",`last_name_eng`," ",`name_arm`," ",`last_name_arm`," ",`id`) LIKE "%' . $search . '%"');
+                            ->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`, `id`) LIKE ?', ['%' . $search . '%']);
                     })
                         ->whereHas('roles', function ($query) {
                             $query->whereIn('role_id', [4, 6, 7, 8]);
@@ -217,7 +217,7 @@ class EstateRentContractCrudController extends CrudController
             'query' => function ($model) {
                 $search = request()->input('q') ?? false;
                 if ($search) {
-                    return $model->whereIn('contact_type_id', [4,5])->whereRaw('CONCAT(`name_eng`," ",`last_name_eng`," ",`name_arm`," ",`last_name_arm`," ",`id`) LIKE "%' . $search . '%"');
+                    return $model->whereIn('contact_type_id', [4,5])->whereRaw('CONCAT_WS(" ", `name_eng`, `last_name_eng`, `name_arm`, `last_name_arm`, `id`) LIKE ?', ['%' . $search . '%']);
                 } else {
                     return $model->whereIn('contact_type_id', [4,5]);
                 }
