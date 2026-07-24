@@ -239,8 +239,8 @@ trait AddContactShowColumns
         ]);
 
         CRUD::addColumn([
-            'name' => 'client.broker.contact.fullName',
-            'attribute' => 'name_arm',
+            'name' => 'client.broker',
+            'attribute' => 'contactFullName',
             'type' => "relationship",
             'limit' => 5000,
             'label' => "Գործակալ",

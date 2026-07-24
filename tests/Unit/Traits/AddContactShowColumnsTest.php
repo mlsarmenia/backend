@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class AddContactShowColumnsTest extends TestCase
 {
-    public function test_info_source_uses_its_direct_relationship_and_name_attribute(): void
+    public function test_client_show_columns_use_direct_relationships_and_display_attributes(): void
     {
         $columns = [];
 
@@ -38,9 +38,13 @@ class AddContactShowColumnsTest extends TestCase
             collect($columns)->firstWhere('name', 'client.infoSource.contact.fullName')
         );
 
-        $brokerColumn = collect($columns)->firstWhere('name', 'client.broker.contact.fullName');
+        $brokerColumn = collect($columns)->firstWhere('name', 'client.broker');
 
         $this->assertNotNull($brokerColumn);
-        $this->assertSame('name_arm', $brokerColumn['attribute']);
+        $this->assertSame('contactFullName', $brokerColumn['attribute']);
+        $this->assertSame('relationship', $brokerColumn['type']);
+        $this->assertNull(
+            collect($columns)->firstWhere('name', 'client.broker.contact.fullName')
+        );
     }
 }
