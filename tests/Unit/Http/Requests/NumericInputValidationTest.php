@@ -29,6 +29,7 @@ class NumericInputValidationTest extends TestCase
             'price_amd' => 'expensive',
             'price_amd_initial' => -1,
             'price_amd_selled' => 'sold',
+            'refund_percentage' => 100.01,
         ];
 
         foreach ($invalidValues as $attribute => $value) {
@@ -40,6 +41,31 @@ class NumericInputValidationTest extends TestCase
             $this->assertTrue(
                 $validator->fails(),
                 "{$requestClass} should reject {$attribute}={$value}."
+            );
+        }
+    }
+
+    #[DataProvider('estateRequests')]
+    public function test_estate_requests_validate_refund_percentage_range(string $requestClass): void
+    {
+        $rules = (new $requestClass)->rules();
+        $refundRules = ['refund_percentage' => $rules['refund_percentage']];
+
+        foreach ([0, 12.5, 100] as $value) {
+            $validator = Validator::make(['refund_percentage' => $value], $refundRules);
+
+            $this->assertFalse(
+                $validator->fails(),
+                "{$requestClass} should accept refund_percentage={$value}."
+            );
+        }
+
+        foreach ([-0.01, 100.01, 'ten'] as $value) {
+            $validator = Validator::make(['refund_percentage' => $value], $refundRules);
+
+            $this->assertTrue(
+                $validator->fails(),
+                "{$requestClass} should reject refund_percentage={$value}."
             );
         }
     }

@@ -131,6 +131,14 @@ trait AddEstateListColumns
         ]);
 
         CRUD::addColumn([
+            'name' => 'refund_display',
+            'type' => 'text',
+            'label' => trans('estate.refund'),
+            'default' => '-',
+            'orderable' => false,
+        ]);
+
+        CRUD::addColumn([
             'name' => 'area_total',
             'type' => "text",
             'label' => "Մակերես",

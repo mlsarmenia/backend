@@ -156,6 +156,11 @@
                         արժեք: {{ isset($estate->price_per_square) ? $estate->price_per_square : '' }}</div>
                     <div class="p-4 bg-slate-100">
                         Գին: {{ isset($estate->full_price) ? $estate->full_price : '' }}</div>
+                    @if($estate->refund_display)
+                        <div class="p-4 bg-slate-100">
+                            {{ trans('estate.refund') }}: {{ $estate->refund_display }}
+                        </div>
+                    @endif
                 </div>
             </div>
 

@@ -30,6 +30,7 @@ use Spatie\Activitylog\LogOptions;
  * @property float|null $area_total
  * @property float|null $old_price
  * @property float|null $price
+ * @property float|null $refund_percentage
  * @property int|null $currency_id
  * @property int|null $seller_id
  * @property float|null $area_residential
@@ -264,6 +265,7 @@ class Estate extends Model
         'area_total' => 'float',
         'old_price' => 'float',
         'price' => 'float',
+        'refund_percentage' => 'decimal:2',
         'currency_id' => 'integer',
         'seller_id' => 'integer',
         'area_residential' => 'float',
@@ -572,6 +574,7 @@ class Estate extends Model
         'info_source_id',
         'price_usd',
         'price_amd',
+        'refund_percentage',
         'archive_till_date',
         'archive_comment_arm',
         'archive_comment_eng',
@@ -1076,6 +1079,30 @@ class Estate extends Model
         $currency = session('currency') ?  session('currency') : 'AMD';
 
         return $this->getFormattedPrice() . ' ' . $currency;
+    }
+
+    public function getRefundAmountAttribute(): ?float
+    {
+        $price = (float) $this->price_amd;
+        $percentage = (float) $this->refund_percentage;
+
+        if ($price <= 0 || $percentage <= 0) {
+            return null;
+        }
+
+        return round($price * $percentage / 100, 2);
+    }
+
+    public function getRefundDisplayAttribute(): ?string
+    {
+        if ($this->refund_amount === null) {
+            return null;
+        }
+
+        $percentage = rtrim(rtrim(number_format((float) $this->refund_percentage, 2, '.', ''), '0'), '.');
+        $amount = number_format($this->refund_amount, 0, '.', ',');
+
+        return "{$percentage}% / {$amount} AMD";
     }
 
     public function getFullPriceWithChangeAttribute(): ?string

@@ -2,6 +2,9 @@
 
 return [
 
+    'refund' => 'Refund',
+    'refund_percentage' => 'Refund percentage',
+
     "button.add" => "Add",
     "button.addPhotos" => "Add photos",
     "button.addToFavorites" => "Add to favorites",
