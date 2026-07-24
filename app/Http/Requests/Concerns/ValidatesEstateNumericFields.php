@@ -43,6 +43,7 @@ trait ValidatesEstateNumericFields
             'price_amd' => ['nullable', 'numeric', 'min:0'],
             'price_amd_initial' => ['nullable', 'numeric', 'min:0'],
             'price_amd_selled' => ['nullable', 'numeric', 'min:0'],
+            'refund_percentage' => ['nullable', 'numeric', 'min:0', 'max:100'],
         ];
     }
 }

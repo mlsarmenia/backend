@@ -319,6 +319,21 @@ trait AddEstateCreateCommonFields
             ],
             "suffix" => 'AMD'
         ]);
+
+        CRUD::addField([
+            'name' => 'refund_percentage',
+            'type' => 'number',
+            'label' => trans('estate.refund_percentage'),
+            'attributes' => [
+                'min' => 0,
+                'max' => 100,
+                'step' => '0.01',
+            ],
+            'wrapper' => [
+                'class' => 'form-group col-md-4',
+            ],
+            'suffix' => '%',
+        ]);
     }
     private function addCreateAdditionalFields(): void
     {

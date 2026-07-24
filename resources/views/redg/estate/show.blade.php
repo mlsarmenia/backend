@@ -109,6 +109,9 @@
                                 <li><strong>Ընդհանուր մակերես:</strong> {{ $estate->area_total }}</li>
                                 <li><strong>1քմ արժեք:</strong> {{ $estate->price_per_square }}</li>
                                 <li><strong>Գին:</strong> {{ $estate->full_price }}</li>
+                                @if($estate->refund_display)
+                                    <li><strong>{{ trans('estate.refund') }}:</strong> {{ $estate->refund_display }}</li>
+                                @endif
                                 <li><strong>Առաստաղի բարձրություն:</strong> {{ $estate->ceiling_height_type?->name_arm }}
                                 </li>
                             </ul>
