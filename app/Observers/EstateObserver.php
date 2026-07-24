@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Estate;
 use App\Models\EstateDocument;
 use App\Services\CurrencyRateService;
+use App\Services\EstateMainImageService;
 use App\Traits\GeneratesEstateCode;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\App;
@@ -235,6 +236,12 @@ class EstateObserver
                 $filenames = array_map('basename', $estatePhotos);
 
                 EstateDocument::where('estate_id', $estate->id)->whereIn('path', array_diff($existingPhotos, $filenames))->delete();
+
+                App::make(EstateMainImageService::class)->applyDeferredSelection(
+                    $estate,
+                    $estatePhotos,
+                    request()->input('temporary_photos_main')
+                );
             }
         }
 
