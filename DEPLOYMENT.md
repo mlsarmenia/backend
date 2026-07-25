@@ -71,8 +71,23 @@ MAIL_FROM_NAME="${APP_NAME}"
 ```
 
 Keep all provider credentials in the Cloudways environment, never in Git.
-Telegram settings remain disabled until their channel implementations are
-added.
+The personal Telegram bot remains disabled until its later implementation.
+Keep the estate channel disabled until its production settings are ready.
+
+For the estate Telegram channel, add the bot as a channel administrator and
+configure:
+
+```text
+TELEGRAM_CHANNEL_NOTIFICATIONS_ENABLED=true
+TELEGRAM_CHANNEL_BOT_TOKEN=<bot token>
+TELEGRAM_CHANNEL_CHAT_ID=<channel id such as -1001234567890>
+TELEGRAM_CHANNEL_ESTATE_STATUS_IDS=3,4
+```
+
+Estates are posted when they are public or first enter one of the configured
+statuses. Draft and incomplete estates are not posted. Keep the feature
+disabled until the bot token, channel ID, Redis queue, and Horizon worker have
+all been verified.
 
 Run Horizon under a Cloudways-managed process monitor so it restarts
 automatically:

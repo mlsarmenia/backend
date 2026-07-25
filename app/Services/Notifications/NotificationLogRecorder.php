@@ -70,11 +70,12 @@ class NotificationLogRecorder
         $context = $notification->auditContext();
         $recipient = $this->recipient($notifiable, $notification, $channel);
         $identity = $this->notifiableIdentity($notifiable);
+        $channelName = $this->channelName($channel);
 
         $log = NotificationLog::query()->firstOrNew([
             'notification_id' => $notification->id,
-            'channel' => $channel,
-            'recipient_key' => hash('sha256', $identity['key'].'|'.$channel.'|'.$recipient),
+            'channel' => $channelName,
+            'recipient_key' => hash('sha256', $identity['key'].'|'.$channelName.'|'.$recipient),
         ]);
 
         if ($log->exists && $log->status === 'sent' && $status !== 'sent') {
@@ -142,5 +143,16 @@ class NotificationLogRecorder
     private function limitError(string $error): string
     {
         return Str::limit($error, 5000, '');
+    }
+
+    private function channelName(string $driver): string
+    {
+        foreach (config('notifications.channels', []) as $channel => $settings) {
+            if (($settings['driver'] ?? null) === $driver) {
+                return $channel;
+            }
+        }
+
+        return $driver;
     }
 }

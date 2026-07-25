@@ -5,9 +5,11 @@ namespace Tests\Unit\Events;
 use App\Events\BrokerAssignmentChanged;
 use App\Events\BuyerCreated;
 use App\Events\EstateCreated;
+use App\Events\EstatePublished;
 use App\Models\Client;
 use App\Models\Estate;
 use App\Observers\ClientObserver;
+use App\Observers\EstateObserver;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
@@ -25,6 +27,7 @@ class NotificationDomainEventsTest extends TestCase
             new BrokerAssignmentChanged($client, 5, 8)
         );
         $this->assertInstanceOf(ShouldDispatchAfterCommit::class, new EstateCreated($estate));
+        $this->assertInstanceOf(ShouldDispatchAfterCommit::class, new EstatePublished($estate));
     }
 
     public function test_client_creation_dispatches_the_buyer_created_event(): void
@@ -71,5 +74,27 @@ class NotificationDomainEventsTest extends TestCase
         (new ClientObserver)->updated($client);
 
         Event::assertNotDispatched(BrokerAssignmentChanged::class);
+    }
+
+    public function test_estate_becoming_publishable_dispatches_the_published_event(): void
+    {
+        config()->set('notifications.channels.telegram-channel.estate_status_ids', [3, 4]);
+        Event::fake([EstatePublished::class]);
+
+        $estate = (new Estate)->forceFill([
+            'id' => 12,
+            'estate_status_id' => 1,
+            'is_published' => false,
+        ]);
+        $estate->syncOriginal();
+        $estate->estate_status_id = 3;
+        $estate->syncChanges();
+
+        (new EstateObserver)->updated($estate);
+
+        Event::assertDispatched(
+            EstatePublished::class,
+            fn (EstatePublished $event): bool => $event->estate === $estate
+        );
     }
 }
