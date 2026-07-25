@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\BrokerAssignmentChanged;
+use App\Events\BuyerCreated;
 use App\Events\EstateCreated;
 use App\Events\EstatePublished;
+use App\Listeners\Notifications\QueueAssignedBrokerNotification;
+use App\Listeners\Notifications\QueueBuyerMatchNotifications;
 use App\Listeners\Notifications\QueueEstateTelegramChannelNotification;
 use App\Listeners\Notifications\RecordNotificationFailed;
 use App\Listeners\Notifications\RecordNotificationSending;
@@ -44,6 +48,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         EstatePublished::class => [
             QueueEstateTelegramChannelNotification::class,
+        ],
+        BuyerCreated::class => [
+            QueueBuyerMatchNotifications::class,
+        ],
+        BrokerAssignmentChanged::class => [
+            QueueAssignedBrokerNotification::class,
         ],
     ];
 
