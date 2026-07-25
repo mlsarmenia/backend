@@ -332,8 +332,6 @@
                             e.preventDefault();
                             e.stopPropagation();
                             if (isDropzoneActive) {
-
-                                const filePath = file?.path || file?.upload?.filename;
                                 const selectMainButton = function () {
                                     $(dz).find('.dz-main.text-success').html('<i class="lar la-star"></i>');
                                     $(dz).find('.dz-main.text-success').removeClass('text-success');
@@ -341,44 +339,20 @@
                                     $(mainButton).html('<i class="las la-star"></i>');
                                 };
 
-                                if (!filePath) {
-                                    Swal.fire({
-                                        title: "Սպասեք մինչև նկարի վերբեռնումն ավարտվի",
-                                        icon: "error",
-                                        timer: 4000,
-                                        buttons: false,
-                                    });
-                                    return false
-                                }
+                                _this.files.forEach(function (candidate) {
+                                    candidate.selectAsMainAfterUpload = false;
+                                });
 
-                                if(!file.id) {
-                                    mainPhotoInput.value = filePath;
-                                    selectMainButton();
+                                if (file?.path) {
+                                    mainPhotoInput.value = file.path;
+                                    mainPhotoInput.dispatchEvent(new Event('change', {bubbles: true}));
                                 } else {
-                                    $.ajax({
-                                        url: '/admin/estate/'+file.id+'/set-main-image',
-                                        type: 'POST',
-                                        success: function(result) {
-                                            if (result == 1) {
-                                                mainPhotoInput.value = '';
-                                                selectMainButton();
-                                            } else {
-                                                Swal.fire({
-                                                    title: "Something went wrong",
-                                                    icon: "error",
-                                                });
-                                            }
-                                        },
-                                        error: function(result) {
-                                            Swal.fire({
-                                                title: "Something went wrong",
-                                                icon: "error",
-                                            });
-                                        }
-                                    })
+                                    mainPhotoInput.value = '';
+                                    mainPhotoInput.dispatchEvent(new Event('change', {bubbles: true}));
+                                    file.selectAsMainAfterUpload = true;
                                 }
 
-
+                                selectMainButton();
                             }
                         });
 
@@ -519,6 +493,13 @@
                         file.previewElement.style.visibility = 'visible';
                         file.upload.filename = response.files[index];
                         file.path = response.files[index];
+
+                        if (file.selectAsMainAfterUpload) {
+                            mainPhotoInput.value = file.path;
+                            mainPhotoInput.dispatchEvent(new Event('change', {bubbles: true}));
+                            file.selectAsMainAfterUpload = false;
+                        }
+
                         let uploadedFileNameContainer = file.previewElement.querySelector('[data-dz-name]');
                         uploadedFileNameContainer.innerHTML = response.files[index];
                     });
