@@ -49,3 +49,42 @@ php artisan queue:restart
 The application enters maintenance mode while these commands run and is
 restored automatically if a command fails. Application code and Composer
 dependencies are also restored from the local rollback copy on failure.
+
+## Notification infrastructure
+
+Production notifications require SMTP and Redis queue values in the server
+`.env`:
+
+```text
+QUEUE_CONNECTION=redis
+NOTIFICATION_QUEUE=notifications
+NOTIFICATION_MAIL_ENABLED=true
+
+MAIL_MAILER=smtp
+MAIL_HOST=<provider host>
+MAIL_PORT=<provider port>
+MAIL_USERNAME=<provider username>
+MAIL_PASSWORD=<provider password>
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=<verified sender>
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+Keep all provider credentials in the Cloudways environment, never in Git.
+Telegram settings remain disabled until their channel implementations are
+added.
+
+Run Horizon under a Cloudways-managed process monitor so it restarts
+automatically:
+
+```text
+php artisan horizon
+```
+
+The worker must process both `default` and `notifications`. After deployment,
+verify it with:
+
+```text
+php artisan horizon:status
+php artisan queue:monitor redis:default,redis:notifications --max=100
+```

@@ -2,10 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Events\EstateCreated;
 use App\Events\EstateDocumentUploaded;
 use App\Jobs\MoveTemporaryFilesToPermanentDirectory;
-use stdClass;
 
 class EstateSubscriber
 {
@@ -26,11 +24,6 @@ class EstateSubscriber
      */
     public function subscribe($events)
     {
-        $events->listen(
-            EstateCreated::class,
-            [EstateSubscriber::class, 'onEstateCreated']
-        );
-
         $events->listen(
             EstateDocumentUploaded::class,
             [EstateSubscriber::class, 'onEstateDocumentUploaded']
