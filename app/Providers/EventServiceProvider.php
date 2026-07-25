@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\EstateCreated;
+use App\Events\EstatePublished;
+use App\Listeners\Notifications\QueueEstateTelegramChannelNotification;
 use App\Listeners\Notifications\RecordNotificationFailed;
 use App\Listeners\Notifications\RecordNotificationSending;
 use App\Listeners\Notifications\RecordNotificationSent;
@@ -35,6 +38,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         NotificationFailed::class => [
             RecordNotificationFailed::class,
+        ],
+        EstateCreated::class => [
+            QueueEstateTelegramChannelNotification::class,
+        ],
+        EstatePublished::class => [
+            QueueEstateTelegramChannelNotification::class,
         ],
     ];
 

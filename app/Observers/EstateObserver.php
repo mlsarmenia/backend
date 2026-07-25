@@ -3,10 +3,12 @@
 namespace App\Observers;
 
 use App\Events\EstateCreated;
+use App\Events\EstatePublished;
 use App\Models\Estate;
 use App\Models\EstateDocument;
 use App\Services\CurrencyRateService;
 use App\Services\EstateMainImageService;
+use App\Services\Notifications\EstateTelegramPublicationPolicy;
 use App\Traits\GeneratesEstateCode;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\App;
@@ -158,7 +160,9 @@ class EstateObserver
      */
     public function updated(Estate $estate): void
     {
-
+        if (App::make(EstateTelegramPublicationPolicy::class)->becameReady($estate)) {
+            EstatePublished::dispatch($estate);
+        }
     }
 
     /**
