@@ -5,6 +5,25 @@ use App\Notifications\Channels\TelegramChannel;
 return [
     'queue' => env('NOTIFICATION_QUEUE', 'notifications'),
 
+    'buyer_matches' => [
+        'admin_emails' => array_values(array_filter(array_map(
+            static fn (string $email): string => trim($email),
+            explode(',', env('NOTIFICATION_ADMIN_EMAILS', ''))
+        ))),
+        'estate_summary_limit' => (int) env(
+            'NOTIFICATION_BUYER_MATCH_ESTATE_SUMMARY_LIMIT',
+            10
+        ),
+        'broker_summary_limit' => (int) env(
+            'NOTIFICATION_BUYER_MATCH_BROKER_SUMMARY_LIMIT',
+            20
+        ),
+        'delay_seconds' => (int) env(
+            'NOTIFICATION_BUYER_MATCH_DELAY_SECONDS',
+            5
+        ),
+    ],
+
     'channels' => [
         'mail' => [
             'enabled' => env('NOTIFICATION_MAIL_ENABLED', true),
