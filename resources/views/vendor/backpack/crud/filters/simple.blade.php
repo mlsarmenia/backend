@@ -30,6 +30,28 @@
 				e.preventDefault();
 
 				var parameter = $(this).attr('parameter');
+				var extendedRanges = {
+					extended_price: ['price_range', 'price'],
+					extended_area: ['area_range', 'area'],
+					extended_price_sqm: ['price_sqm', 'extended_price_sqm_range']
+				};
+
+				if (extendedRanges[parameter]) {
+					var relatedFilters = extendedRanges[parameter];
+					var pageUrl = URI(window.location.href).normalizeQuery();
+
+					if (pageUrl.hasQuery(parameter)) {
+						pageUrl.removeQuery(parameter);
+						pageUrl.removeQuery(relatedFilters[1]);
+					} else {
+						pageUrl.removeQuery(relatedFilters[0]);
+						pageUrl.addQuery(parameter, true);
+					}
+
+					window.location.assign(normalizeAmpersand(pageUrl.toString()));
+
+					return;
+				}
 
 		    	// behaviour for ajax table
 				var ajax_table = $("#crudTable").DataTable();
