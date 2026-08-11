@@ -286,8 +286,7 @@ class BuyerCrudController extends CrudController
 
                 [
                     'name' => 'price_from',
-                    'type' => "number",
-                    'attributes' => ['min' => 0, 'step' => 'any'],
+                    'type' => "whole_number",
                     'label' => "Գինը սկսած",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -296,8 +295,7 @@ class BuyerCrudController extends CrudController
 
                 [
                     'name' => 'price_to',
-                    'type' => "number",
-                    'attributes' => ['min' => 0, 'step' => 'any'],
+                    'type' => "whole_number",
                     'label' => "Գինը մինչև",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -306,8 +304,7 @@ class BuyerCrudController extends CrudController
 
                 [
                     'name' => 'area_from',
-                    'type' => "number",
-                    'attributes' => ['min' => 0, 'step' => 'any'],
+                    'type' => "whole_number",
                     'label' => "Մակերեսը սկսած",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -316,8 +313,7 @@ class BuyerCrudController extends CrudController
 
                 [
                     'name' => 'area_to',
-                    'type' => "number",
-                    'attributes' => ['min' => 0, 'step' => 'any'],
+                    'type' => "whole_number",
                     'label' => "Մակերեսը մինչև",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -326,8 +322,7 @@ class BuyerCrudController extends CrudController
 
                 [
                     'name' => 'room_count_from',
-                    'type' => "number",
-                    'attributes' => ['min' => 0, 'step' => 1],
+                    'type' => "whole_number",
                     'label' => "Սենյակներ սկսած",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'
@@ -336,8 +331,7 @@ class BuyerCrudController extends CrudController
 
                 [
                     'name' => 'room_count_to',
-                    'type' => "number",
-                    'attributes' => ['min' => 0, 'step' => 1],
+                    'type' => "whole_number",
                     'label' => "Սենյակներ մինչև",
                     'wrapper' => [
                         'class' => 'form-group col-md-6'

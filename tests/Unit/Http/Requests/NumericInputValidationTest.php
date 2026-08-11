@@ -109,12 +109,12 @@ class NumericInputValidationTest extends TestCase
 
         $invalid = Validator::make([
             'client' => [[
-                'price_from' => 'cheap',
-                'price_to' => -1,
-                'area_from' => 'large',
-                'area_to' => -0.5,
+                'price_from' => '100.5',
+                'price_to' => '-1',
+                'area_from' => '40.5',
+                'area_to' => '-0.5',
                 'room_count_from' => '1.5',
-                'room_count_to' => -1,
+                'room_count_to' => '-1',
             ]],
         ], $rules);
 
@@ -133,8 +133,8 @@ class NumericInputValidationTest extends TestCase
             'client' => [[
                 'currency_id' => 1,
                 'price_from' => 100000,
-                'price_to' => 200000.50,
-                'area_from' => 40.5,
+                'price_to' => 200000,
+                'area_from' => 40,
                 'area_to' => 90,
                 'room_count_from' => 1,
                 'room_count_to' => 3,
@@ -142,6 +142,25 @@ class NumericInputValidationTest extends TestCase
         ], $rules);
 
         $this->assertFalse($valid->fails());
+    }
+
+    public function test_buyer_range_fields_use_digit_only_inputs(): void
+    {
+        $controller = file_get_contents(app_path('Http/Controllers/Admin/BuyerCrudController.php'));
+        $field = file_get_contents(resource_path('views/vendor/backpack/crud/fields/whole_number.blade.php'));
+
+        foreach (['price_from', 'price_to', 'area_from', 'area_to', 'room_count_from', 'room_count_to'] as $name) {
+            $this->assertMatchesRegularExpression(
+                "/'name'\\s*=>\\s*'{$name}',\\s*'type'\\s*=>\\s*\"whole_number\"/",
+                $controller,
+            );
+        }
+
+        $this->assertStringContainsString('inputmode="numeric"', $field);
+        $this->assertStringContainsString('pattern="[0-9]*"', $field);
+        $this->assertStringContainsString("input.addEventListener('beforeinput'", $field);
+        $this->assertStringContainsString("input.addEventListener('paste'", $field);
+        $this->assertStringContainsString("value.replace(/[^0-9]/g, '')", $field);
     }
 
     public static function estateRequests(): array
