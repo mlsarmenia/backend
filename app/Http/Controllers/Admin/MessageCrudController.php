@@ -191,7 +191,7 @@ class MessageCrudController extends CrudController
 //        CRUD::field('estate_id');
         CRUD::field('sender_name');
         CRUD::field('sender_email');
-        CRUD::field('sender_phone');
+        CRUD::field('sender_phone')->type('phone');
         CRUD::field('message_type_id');
         CRUD::field('feedback_type_id');
         CRUD::field('service_id');

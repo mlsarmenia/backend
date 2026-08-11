@@ -20,6 +20,9 @@
 
 <input
     type="tel"
+    inputmode="numeric"
+    pattern="[0-9]*"
+    autocomplete="tel"
     data-config="{{json_encode($field['config'])}}"
     bp-field-main-input
     data-init-function="bpFieldInitPhoneElement"
@@ -89,21 +92,54 @@
                     element.parent().removeClass('text-danger');
                     element.parent().parent().addClass('text-danger');
                 }
+
+                syncPhoneNumber();
             });
 
 
             var inputName = $phoneConfig.hiddenInput;
             var inputHidden = document.querySelector("[name='"+inputName+"']");
 
+            function digitsOnly(value) {
+                return value.replace(/[^0-9]/g, '');
+            }
+
+            function syncPhoneNumber() {
+                var sanitizedValue = digitsOnly(input.value);
+
+                if (input.value !== sanitizedValue) {
+                    input.value = sanitizedValue;
+                }
+
+                $(inputHidden).val(iti.getNumber());
+            }
+
+            input.addEventListener('beforeinput', function(event) {
+                if (event.data && /[^0-9]/.test(event.data)) {
+                    event.preventDefault();
+                }
+            });
+
+            input.addEventListener('paste', function(event) {
+                var pastedValue = (event.clipboardData || window.clipboardData).getData('text');
+                var sanitizedValue = digitsOnly(pastedValue);
+
+                if (pastedValue !== sanitizedValue) {
+                    event.preventDefault();
+
+                    var selectionStart = input.selectionStart ?? input.value.length;
+                    var selectionEnd = input.selectionEnd ?? input.value.length;
+                    input.setRangeText(sanitizedValue, selectionStart, selectionEnd, 'end');
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            });
 
             input.addEventListener('input', function() {
-                var fullNumber = iti.getNumber();
-                $(inputHidden).val(fullNumber)
+                syncPhoneNumber();
             });
 
             input.addEventListener("countrychange", function() {
-                var fullNumber = iti.getNumber();
-                $(inputHidden).val(fullNumber)
+                syncPhoneNumber();
             });
 
         }
