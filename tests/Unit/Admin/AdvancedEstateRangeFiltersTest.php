@@ -42,4 +42,13 @@ class AdvancedEstateRangeFiltersTest extends TestCase
         $this->assertStringNotContainsString("price_amd/area_total > ?", $filters);
         $this->assertStringNotContainsString("price_amd / estate.area_total < ?", $filters);
     }
+
+    public function test_legacy_advanced_filter_view_remains_a_safe_compatibility_alias(): void
+    {
+        $view = file_get_contents(resource_path(
+            'views/vendor/backpack/crud/filters/extended_range_toggle.blade.php'
+        ));
+
+        $this->assertStringContainsString("@include('crud::filters.simple')", $view);
+    }
 }
