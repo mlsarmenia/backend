@@ -455,28 +455,28 @@ trait HasEstateFilters
 
                     if ($currency == 'AMD') {
                         if ($range->from) {
-                            $this->crud->addClause('whereRaw', 'price_amd/area_total > ?', [(float)$range->from]);
+                            $this->crud->addClause('whereRaw', 'price_amd/area_total >= ?', [(float)$range->from]);
                         }
                         if ($range->to) {
-                            $this->crud->addClause('whereRaw', 'price_amd / estate.area_total < ?', [(float)$range->to]);
+                            $this->crud->addClause('whereRaw', 'price_amd / estate.area_total <= ?', [(float)$range->to]);
                         }
                     }
 
                     if ($currency == 'RUB') {
                         if ($range->from) {
-                            $this->crud->addClause('whereRaw', 'price_amd/area_total > ?', [(float)$range->from * 4]);
+                            $this->crud->addClause('whereRaw', 'price_amd/area_total >= ?', [(float)$range->from * 4]);
                         }
                         if ($range->to) {
-                            $this->crud->addClause('whereRaw', 'price_amd / estate.area_total < ?', [(float)$range->to * 4]);
+                            $this->crud->addClause('whereRaw', 'price_amd / estate.area_total <= ?', [(float)$range->to * 4]);
                         }
                     }
 
                     if ($currency == 'USD') {
                         if ($range->from) {
-                            $this->crud->addClause('whereRaw', 'price_amd/area_total > ?', [(float)$range->from * 390]);
+                            $this->crud->addClause('whereRaw', 'price_amd/area_total >= ?', [(float)$range->from * 390]);
                         }
                         if ($range->to) {
-                            $this->crud->addClause('whereRaw', 'price_amd / estate.area_total < ?', [(float)$range->to * 390]);
+                            $this->crud->addClause('whereRaw', 'price_amd / estate.area_total <= ?', [(float)$range->to * 390]);
                         }
                     }
                 });
@@ -510,8 +510,12 @@ trait HasEstateFilters
         ]);
 
         $this->crud->addFilter([
-            'type' => 'simple',
+            'type' => 'extended_range_toggle',
             'name' => 'extended_price',
+            'options' => [
+                'basic_filter' => 'price_range',
+                'range_filter' => 'price',
+            ],
             'label' => 'Ընդլայնված',
         ],
             false,
@@ -520,8 +524,12 @@ trait HasEstateFilters
             });
 
         $this->crud->addFilter([
-            'type' => 'simple',
+            'type' => 'extended_range_toggle',
             'name' => 'extended_area',
+            'options' => [
+                'basic_filter' => 'area_range',
+                'range_filter' => 'area',
+            ],
             'label' => 'Ընդլայնված',
         ],
             false,
@@ -530,8 +538,12 @@ trait HasEstateFilters
             });
 
         $this->crud->addFilter([
-            'type' => 'simple',
+            'type' => 'extended_range_toggle',
             'name' => 'extended_price_sqm',
+            'options' => [
+                'basic_filter' => 'price_sqm',
+                'range_filter' => 'extended_price_sqm_range',
+            ],
             'label' => 'Ընդլայնված',
         ],
             false,
