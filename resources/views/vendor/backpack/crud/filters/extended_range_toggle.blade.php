@@ -1,0 +1,1 @@
+@include('crud::filters.simple')
