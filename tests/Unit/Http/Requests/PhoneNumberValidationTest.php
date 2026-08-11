@@ -84,6 +84,8 @@ class PhoneNumberValidationTest extends TestCase
         $this->assertStringContainsString("input.addEventListener('beforeinput'", $field);
         $this->assertStringContainsString("input.addEventListener('paste'", $field);
         $this->assertStringContainsString("value.replace(/[^0-9]/g, '')", $field);
+        $this->assertStringContainsString("@bassetBlock('mls/fields/phone-field-digits-only-v1.js')", $field);
+        $this->assertStringNotContainsString("@bassetBlock('backpack/pro/fields/phone-field.js')", $field);
     }
 
     public static function invalidPhoneNumbers(): array
