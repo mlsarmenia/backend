@@ -58,7 +58,7 @@
 @push('crud_fields_scripts')
     {{-- include intl-tel-input js --}}
     @basset('https://unpkg.com/intl-tel-input@17.0.19/build/js/intlTelInput.min.js')
-    @bassetBlock('backpack/pro/fields/phone-field.js')
+    @bassetBlock('mls/fields/phone-field-digits-only-v1.js')
     <script>
         function bpFieldInitPhoneElement(element) {
             let $phoneConfig = element.data('config');
