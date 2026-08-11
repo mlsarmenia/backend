@@ -116,11 +116,11 @@ class ContactCrudController extends CrudController
         CRUD::field('email');
         CRUD::field('organization');
         CRUD::field('contact_type_id');
-        CRUD::field('phone_mobile_1');
-        CRUD::field('phone_mobile_2');
-        CRUD::field('phone_office');
-        CRUD::field('phone_home');
-        CRUD::field('fax');
+        $this->addContactPhoneField('phone_mobile_1');
+        $this->addContactPhoneField('phone_mobile_2');
+        $this->addContactPhoneField('phone_office');
+        $this->addContactPhoneField('phone_home');
+        $this->addContactPhoneField('fax');
         CRUD::field('comment_arm');
         CRUD::field('comment_eng');
         CRUD::field('comment_ru');
@@ -166,10 +166,10 @@ class ContactCrudController extends CrudController
         CRUD::field('contact_status_id');
         CRUD::field('is_urgent');
         CRUD::field('web_site');
-        CRUD::field('phone_mobile_3');
-        CRUD::field('phone_mobile_4');
-        CRUD::field('viber');
-        CRUD::field('whatsapp');
+        $this->addContactPhoneField('phone_mobile_3');
+        $this->addContactPhoneField('phone_mobile_4');
+        $this->addContactPhoneField('viber');
+        $this->addContactPhoneField('whatsapp');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -187,5 +187,15 @@ class ContactCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    private function addContactPhoneField(string $name): void
+    {
+        CRUD::field($name)
+            ->type('phone')
+            ->config([
+                'onlyCountries' => ['am', 'us', 'ru'],
+                'separateDialCode' => true,
+            ]);
     }
 }

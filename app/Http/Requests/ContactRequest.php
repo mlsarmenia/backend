@@ -27,7 +27,15 @@ class ContactRequest extends FormRequest
         return [
             'name_arm' => 'required',
             'last_name_arm' => 'required',
-            'phone_mobile_1' => 'required|min:5|max:255',
+            'phone_mobile_1' => ['required', 'min:5', 'max:40', 'regex:/^\+?[0-9]+$/'],
+            'phone_mobile_2' => ['nullable', 'max:40', 'regex:/^\+?[0-9]+$/'],
+            'phone_mobile_3' => ['nullable', 'max:40', 'regex:/^\+?[0-9]+$/'],
+            'phone_mobile_4' => ['nullable', 'max:40', 'regex:/^\+?[0-9]+$/'],
+            'phone_office' => ['nullable', 'max:40', 'regex:/^\+?[0-9]+$/'],
+            'phone_home' => ['nullable', 'max:40', 'regex:/^\+?[0-9]+$/'],
+            'fax' => ['nullable', 'max:40', 'regex:/^\+?[0-9]+$/'],
+            'viber' => ['nullable', 'max:40', 'regex:/^\+?[0-9]+$/'],
+            'whatsapp' => ['nullable', 'max:40', 'regex:/^\+?[0-9]+$/'],
             'client.*.price_from' => ['nullable', 'numeric', 'min:0'],
             'client.*.price_to' => ['nullable', 'numeric', 'min:0'],
             'client.*.area_from' => ['nullable', 'numeric', 'min:0'],
@@ -62,8 +70,18 @@ class ContactRequest extends FormRequest
      */
     public function messages()
     {
-        return [
-            //
-        ];
+        $message = 'Հեռախոսահամարը կարող է պարունակել միայն թվեր։';
+
+        return collect([
+            'phone_mobile_1',
+            'phone_mobile_2',
+            'phone_mobile_3',
+            'phone_mobile_4',
+            'phone_office',
+            'phone_home',
+            'fax',
+            'viber',
+            'whatsapp',
+        ])->mapWithKeys(fn (string $field): array => ["{$field}.regex" => $message])->all();
     }
 }

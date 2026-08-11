@@ -25,7 +25,7 @@ class MessageRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'sender_phone' => ['nullable', 'max:20', 'regex:/^\+?[0-9]+$/'],
         ];
     }
 
@@ -49,7 +49,7 @@ class MessageRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'sender_phone.regex' => 'Հեռախոսահամարը կարող է պարունակել միայն թվեր։',
         ];
     }
 }
