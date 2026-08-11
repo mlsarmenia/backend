@@ -510,12 +510,8 @@ trait HasEstateFilters
         ]);
 
         $this->crud->addFilter([
-            'type' => 'extended_range_toggle',
+            'type' => 'simple',
             'name' => 'extended_price',
-            'options' => [
-                'basic_filter' => 'price_range',
-                'range_filter' => 'price',
-            ],
             'label' => 'Ընդլայնված',
         ],
             false,
@@ -524,12 +520,8 @@ trait HasEstateFilters
             });
 
         $this->crud->addFilter([
-            'type' => 'extended_range_toggle',
+            'type' => 'simple',
             'name' => 'extended_area',
-            'options' => [
-                'basic_filter' => 'area_range',
-                'range_filter' => 'area',
-            ],
             'label' => 'Ընդլայնված',
         ],
             false,
@@ -538,12 +530,8 @@ trait HasEstateFilters
             });
 
         $this->crud->addFilter([
-            'type' => 'extended_range_toggle',
+            'type' => 'simple',
             'name' => 'extended_price_sqm',
-            'options' => [
-                'basic_filter' => 'price_sqm',
-                'range_filter' => 'extended_price_sqm_range',
-            ],
             'label' => 'Ընդլայնված',
         ],
             false,

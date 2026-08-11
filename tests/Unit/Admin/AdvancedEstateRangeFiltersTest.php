@@ -9,9 +9,7 @@ class AdvancedEstateRangeFiltersTest extends TestCase
     public function test_advanced_filters_switch_between_presets_and_two_input_ranges(): void
     {
         $filters = file_get_contents(app_path('Traits/Controllers/HasEstateFilters.php'));
-        $toggle = file_get_contents(resource_path(
-            'views/vendor/backpack/crud/filters/extended_range_toggle.blade.php'
-        ));
+        $toggle = file_get_contents(resource_path('views/vendor/backpack/crud/filters/simple.blade.php'));
         $range = file_get_contents(resource_path('views/vendor/backpack/crud/filters/range.blade.php'));
 
         foreach ([
@@ -20,16 +18,15 @@ class AdvancedEstateRangeFiltersTest extends TestCase
             'extended_price_sqm' => ['price_sqm', 'extended_price_sqm_range'],
         ] as $name => [$basicFilter, $rangeFilter]) {
             $this->assertMatchesRegularExpression(
-                "/'type'\\s*=>\\s*'extended_range_toggle',\\s*'name'\\s*=>\\s*'{$name}'/",
+                "/'type'\\s*=>\\s*'simple',\\s*'name'\\s*=>\\s*'{$name}'/",
                 $filters,
             );
-            $this->assertStringContainsString("'basic_filter' => '{$basicFilter}'", $filters);
-            $this->assertStringContainsString("'range_filter' => '{$rangeFilter}'", $filters);
+            $this->assertStringContainsString("{$name}: ['{$basicFilter}', '{$rangeFilter}']", $toggle);
         }
 
         $this->assertStringContainsString('URI(window.location.href)', $toggle);
-        $this->assertStringContainsString('url.removeQuery(basicFilter)', $toggle);
-        $this->assertStringContainsString('url.removeQuery(rangeFilter)', $toggle);
+        $this->assertStringContainsString('pageUrl.removeQuery(relatedFilters[0])', $toggle);
+        $this->assertStringContainsString('pageUrl.removeQuery(relatedFilters[1])', $toggle);
         $this->assertStringContainsString('window.location.assign', $toggle);
         $this->assertSame(2, substr_count($range, 'class="form-control range-input'));
         $this->assertStringContainsString('pull-right from', $range);
