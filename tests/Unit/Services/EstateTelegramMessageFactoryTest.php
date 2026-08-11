@@ -33,6 +33,9 @@ class EstateTelegramMessageFactoryTest extends TestCase
         $this->assertStringContainsString('Կենտրոն &lt;փորձ&gt;', $message->text);
         $this->assertStringContainsString('45,000,000 AMD / $116,000', $message->text);
         $this->assertStringContainsString('78.5 մ²', $message->text);
+        $this->assertStringContainsString('Աբովյան', $message->text);
+        $this->assertStringNotContainsString('building-private-15', $message->text);
+        $this->assertStringNotContainsString('apartment-private-8', $message->text);
         $this->assertStringContainsString('/admin/estate/12/show?type=viewOnly', $message->text);
         $this->assertStringContainsString('estate/photos/12/main.jpg', $message->photoUrl);
         $this->assertSame('Դիտել գույքը', $message->actionText);
@@ -67,8 +70,8 @@ class EstateTelegramMessageFactoryTest extends TestCase
             'price_amd' => 45_000_000,
             'price_usd' => 116_000,
             'area_total' => 78.5,
-            'address_building' => '15',
-            'address_apartment' => '8',
+            'address_building' => 'building-private-15',
+            'address_apartment' => 'apartment-private-8',
         ], $attributes));
 
         $estate->setRelation(

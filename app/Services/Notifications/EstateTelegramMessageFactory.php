@@ -26,7 +26,7 @@ class EstateTelegramMessageFactory
             '<b>Նոր գույք</b>',
             '<b>Կոդ՝</b> '.$this->escape($estate->code ?: '#'.$estate->getKey()),
             '<b>Տեսակ՝</b> '.$this->escape($this->type($estate)),
-            '<b>Հասցե՝</b> '.$this->escape($estate->full_address ?: 'Նշված չէ'),
+            '<b>Հասցե՝</b> '.$this->escape($estate->full_address_for_auto_text ?: 'Նշված չէ'),
             '<b>Գին՝</b> '.$this->escape($this->price($estate)),
             '<b>Մակերես՝</b> '.$this->escape($this->area($estate)),
             '<a href="'.$this->escape($url).'">Դիտել MLS-ում</a>',
