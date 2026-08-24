@@ -186,6 +186,7 @@ trait AddEstateCreateCommonFields
             'dependencies' => ['location_province'],
             'label' => "Համայնք",
             'placeholder' => '-Ընտրել մեկը-',
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-3'
             ],
