@@ -20,12 +20,15 @@ class EstateTelegramPublicationPolicy
             return false;
         }
 
-        $wasReady = $this->valuesAreReady(
+        return ! $this->wasReady($estate) && $this->isReady($estate);
+    }
+
+    public function wasReady(Estate $estate): bool
+    {
+        return $this->valuesAreReady(
             (bool) $estate->getRawOriginal('is_published'),
             $this->nullableInt($estate->getRawOriginal('estate_status_id'))
         );
-
-        return ! $wasReady && $this->isReady($estate);
     }
 
     private function valuesAreReady(bool $isPublished, ?int $statusId): bool
