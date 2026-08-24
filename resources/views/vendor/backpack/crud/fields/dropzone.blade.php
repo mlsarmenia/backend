@@ -74,6 +74,12 @@
 
     $readonly = $field['attributes']['readonly'] ?? false;
     $disabled = $field['attributes']['disabled'] ?? false;
+    $storedMainImagePath = $parentModel?->main_image_file_path;
+    $mainPhotoPath = old(
+        $field['name'].'_main',
+        $storedMainImagePath ? 'estate/photos/'.ltrim($storedMainImagePath, '/') : ''
+    );
+    $isRequired = ($field['attributes']['required'] ?? false) !== false;
 
 @endphp
 
@@ -88,11 +94,11 @@
 <input
     type="hidden"
     name="{{ $field['name'] }}_main"
-    value="{{ old($field['name'].'_main', '') }}"
+    value="{{ $mainPhotoPath }}"
     data-dropzone-main-input
 >
 
-<label>{!! $field['label'] !!}</label>
+<label>{!! $field['label'] !!}@if ($isRequired) <span class="text-danger">*</span>@endif</label>
 
 @include('crud::fields.inc.translatable_icon')
 <div class="text-center p-4">

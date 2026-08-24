@@ -10,6 +10,27 @@ class EstateRequest extends FormRequest
 {
     use ValidatesEstateNumericFields;
 
+    private const REQUIRED_APARTMENT_BUILDING_FIELDS = [
+        'building_structure_type',
+        'building_type',
+        'building_project_type',
+        'building_floor_type',
+        'exterior_design_type',
+        'courtyard_improvement',
+        'distance_public_objects',
+        'elevator_type',
+        'year',
+        'parking_type',
+        'entrance_type',
+        'entrance_door_position',
+        'entrance_door_type',
+        'windows_view',
+        'building_window_count',
+        'repairing_type',
+        'heating_system_type',
+        'service_fee_type',
+    ];
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -28,36 +49,86 @@ class EstateRequest extends FormRequest
      */
     public function rules()
     {
-        return $this->withEstateNumericRules([
-             'contract_type' => 'required',
-             'estate_status' => 'required',
-             'seller' => 'required_if:contract_type,1',
-             'owner' => [
-                 'required_if:contract_type,' . ContractType::RENT->value,
-                 'required_if:contract_type,' . ContractType::DAILY_RENT->value,
-             ],
-             'location_province' => 'required',
-             'location_city' => 'required_unless:location_province,1',
-             'location_community' => 'required_if:location_province,1',
-             'location_street' => 'required',
-             'address_building' => 'required_if:estate_status,2,3,4,5,6,7,8',
-             'address_apartment' => [
-                    function ($attribute, $value, $fail) {
-                        $estate_status = (int)$this->input('estate_status');
-                        $estate_type = (int)$this->input('estate_type_id');
+        $rules = [
+            'contract_type' => 'required',
+            'estate_status' => 'required',
+            'agent' => 'required',
+            'seller' => 'required_if:contract_type,1',
+            'owner' => [
+                'required_if:contract_type,' . ContractType::RENT->value,
+                'required_if:contract_type,' . ContractType::DAILY_RENT->value,
+            ],
+            'location_province' => 'required',
+            'location_city' => 'required_unless:location_province,1',
+            'location_community' => 'required_if:location_province,1',
+            'location_street' => 'required',
+            'address_building' => 'required',
+            'address_apartment' => [
+                function ($attribute, $value, $fail) {
+                    $estateStatus = (int) $this->input('estate_status');
+                    $estateType = (int) $this->input('estate_type_id');
 
-                        if (($estate_status === 4) && ($estate_type === 1) && empty($value)) {
-                            $fail($attribute . ' is required.');
-                        }
-                    },
-                ],
-             'room_count' => 'required_if:estate_status,4',
-             'area_total' => 'required_if:estate_status,4',
-             'price_amd' => 'required_if:estate_status,4',
-              'archive_till_date' => 'required_if:estate_status,8',
-              'archive_comment_arm' => 'required_if:estate_status,8'
+                    if (($estateStatus === 4) && ($estateType === 1) && empty($value)) {
+                        $fail($attribute . ' is required.');
+                    }
+                },
+            ],
+            'floor' => 'required',
+            'building_floor_count' => 'required',
+            'ceiling_height_type' => 'required',
+            'room_count' => 'required',
+            'area_total' => 'required',
+            'price_amd' => 'required',
+            'refund_percentage' => 'required',
+            'temporary_photos' => ['required', $this->requiresPhotosAndMainSelection()],
+            'archive_till_date' => 'required_if:estate_status,8',
+            'archive_comment_arm' => 'required_if:estate_status,8',
+        ];
 
-        ]);
+        foreach (self::REQUIRED_APARTMENT_BUILDING_FIELDS as $field) {
+            $rules[$field] = 'required';
+        }
+
+        return $this->withEstateNumericRules($rules);
+    }
+
+    private function requiresPhotosAndMainSelection(): \Closure
+    {
+        return function (string $attribute, mixed $value, \Closure $fail): void {
+            $photos = $this->photoPaths($value);
+
+            if ($photos === []) {
+                $fail('Առնվազն մեկ նկար պետք է վերբեռնված լինի։');
+
+                return;
+            }
+
+            $mainPhoto = $this->input('temporary_photos_main');
+            $photoNames = array_map('basename', $photos);
+
+            if (! is_string($mainPhoto)
+                || trim($mainPhoto) === ''
+                || ! in_array(basename($mainPhoto), $photoNames, true)) {
+                $fail('Պետք է ընտրվի գլխավոր նկար։');
+            }
+        };
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function photoPaths(mixed $value): array
+    {
+        $photos = is_string($value) ? json_decode($value, true) : $value;
+
+        if (! is_array($photos)) {
+            return [];
+        }
+
+        return array_values(array_filter(
+            $photos,
+            static fn (mixed $photo): bool => is_string($photo) && trim($photo) !== ''
+        ));
     }
 
     /**

@@ -76,6 +76,7 @@ trait AddEstateCreateCommonFields
             'attribute' => "name_arm",
             'label' => "Կոնտրակտի տեսակ",
             'placeholder' => '-Ընտրել մեկը-',
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-4'
             ],
@@ -99,6 +100,7 @@ trait AddEstateCreateCommonFields
             'label' => "Գործակալ",
             'minimum_input_length' => 0,
             'ajax' => true,
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-4'
             ],
@@ -153,6 +155,7 @@ trait AddEstateCreateCommonFields
             'attribute' => "name_arm",
             'label' => "Մարզ",
             'placeholder' => '-Ընտրել մեկը-',
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-3 '
             ],
@@ -168,6 +171,7 @@ trait AddEstateCreateCommonFields
             'label' => "Քաղաք",
             'dependencies' => ['location_province'],
             'placeholder' => '-Ընտրել մեկը-',
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-3 '
             ],
@@ -196,6 +200,7 @@ trait AddEstateCreateCommonFields
             'dependencies' => ['location_province'],
             'label' => "Փողոց",
             'placeholder' => '-Ընտրել մեկը-',
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-6'
             ],
@@ -206,6 +211,7 @@ trait AddEstateCreateCommonFields
             'name' => 'address_building',
             'type' => "text",
             'label' => "Շենք",
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-3'
             ],
@@ -233,6 +239,7 @@ trait AddEstateCreateCommonFields
             'name' => 'floor',
             'type' => "number",
             'label' => "Հարկ",
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-3'
             ],
@@ -242,6 +249,7 @@ trait AddEstateCreateCommonFields
             'name' => 'building_floor_count',
             'type' => "number",
             'label' => "Շենքի հարկ",
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-3'
             ],
@@ -254,6 +262,7 @@ trait AddEstateCreateCommonFields
             'attribute' => "name_arm",
             'label' => "Առաստաղի բարձրություն",
             'placeholder' => '-Ընտրել մեկը-',
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-3'
             ],
@@ -274,6 +283,7 @@ trait AddEstateCreateCommonFields
             'name' => 'room_count',
             'type' => "number",
             'label' => "Սենյակներ",
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-2'
             ],
@@ -294,6 +304,7 @@ trait AddEstateCreateCommonFields
             'name' => 'area_total',
             'type' => "number",
             'label' => "Ընդհանուր մակերես",
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-3'
             ],
@@ -314,6 +325,7 @@ trait AddEstateCreateCommonFields
             'name' => 'price_amd',
             'type' => "text",
             'label' => "Գին",
+            'attributes' => ['required' => 'required'],
             'wrapper' => [
                 'class' => 'form-group col-md-4'
             ],
@@ -328,6 +340,7 @@ trait AddEstateCreateCommonFields
                 'min' => 0,
                 'max' => 100,
                 'step' => '0.01',
+                'required' => 'required',
             ],
             'wrapper' => [
                 'class' => 'form-group col-md-4',
@@ -839,6 +852,7 @@ trait AddEstateCreateCommonFields
             'name' => 'temporary_photos',
             'label' => 'Նկարներ',
             'type' => "dropzone",
+            'attributes' => ['required' => 'required'],
             'configuration' => [
                 'parallelUploads' => 10,
                 'uploadMultiple' => true,

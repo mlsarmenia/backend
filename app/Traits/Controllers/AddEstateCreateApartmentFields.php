@@ -43,6 +43,7 @@ trait AddEstateCreateApartmentFields
                 'label' => trans('estate.' . $buildingAttribute),
                 'placeholder' => '-Ընտրել մեկը-',
                 'tab' => 'Հիմնական',
+                'attributes' => ['required' => 'required'],
                 'wrapper' => [
                     'class' => 'form-group col-md-3 apartment_building_attribute'
                 ],
