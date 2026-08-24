@@ -5,7 +5,9 @@ namespace Tests\Unit\Events;
 use App\Events\BrokerAssignmentChanged;
 use App\Events\BuyerCreated;
 use App\Events\EstateCreated;
+use App\Events\EstatePriceChanged;
 use App\Events\EstatePublished;
+use App\Events\EstateRefundPercentageChanged;
 use App\Models\Client;
 use App\Models\Estate;
 use App\Observers\ClientObserver;
@@ -28,6 +30,14 @@ class NotificationDomainEventsTest extends TestCase
         );
         $this->assertInstanceOf(ShouldDispatchAfterCommit::class, new EstateCreated($estate));
         $this->assertInstanceOf(ShouldDispatchAfterCommit::class, new EstatePublished($estate));
+        $this->assertInstanceOf(
+            ShouldDispatchAfterCommit::class,
+            new EstatePriceChanged($estate, 56_500_000, 55_500_000)
+        );
+        $this->assertInstanceOf(
+            ShouldDispatchAfterCommit::class,
+            new EstateRefundPercentageChanged($estate, 1.8, 2)
+        );
     }
 
     public function test_client_creation_dispatches_the_buyer_created_event(): void
@@ -96,5 +106,67 @@ class NotificationDomainEventsTest extends TestCase
             EstatePublished::class,
             fn (EstatePublished $event): bool => $event->estate === $estate
         );
+    }
+
+    public function test_ready_estate_value_changes_dispatch_telegram_change_events(): void
+    {
+        config()->set('notifications.channels.telegram-channel.estate_status_ids', [3, 4]);
+        Event::fake([EstatePriceChanged::class, EstateRefundPercentageChanged::class]);
+
+        $estate = (new Estate)->forceFill([
+            'id' => 12,
+            'estate_status_id' => 3,
+            'is_published' => false,
+            'price_amd' => 56_500_000,
+            'refund_percentage' => 1.8,
+        ]);
+        $estate->syncOriginal();
+        $estate->price_amd = 55_500_000;
+        $estate->refund_percentage = 2;
+        $estate->syncChanges();
+
+        (new EstateObserver)->updated($estate);
+
+        Event::assertDispatched(
+            EstatePriceChanged::class,
+            fn (EstatePriceChanged $event): bool => $event->estate === $estate
+                && (float) $event->previousPriceAmd === 56_500_000.0
+                && (float) $event->priceAmd === 55_500_000.0
+        );
+        Event::assertDispatched(
+            EstateRefundPercentageChanged::class,
+            fn (EstateRefundPercentageChanged $event): bool => $event->estate === $estate
+                && (float) $event->previousRefundPercentage === 1.8
+                && (float) $event->refundPercentage === 2.0
+        );
+    }
+
+    public function test_first_publication_does_not_dispatch_change_events(): void
+    {
+        config()->set('notifications.channels.telegram-channel.estate_status_ids', [3, 4]);
+        Event::fake([
+            EstatePriceChanged::class,
+            EstateRefundPercentageChanged::class,
+            EstatePublished::class,
+        ]);
+
+        $estate = (new Estate)->forceFill([
+            'id' => 12,
+            'estate_status_id' => 1,
+            'is_published' => false,
+            'price_amd' => 56_500_000,
+            'refund_percentage' => 1.8,
+        ]);
+        $estate->syncOriginal();
+        $estate->estate_status_id = 3;
+        $estate->price_amd = 55_500_000;
+        $estate->refund_percentage = 2;
+        $estate->syncChanges();
+
+        (new EstateObserver)->updated($estate);
+
+        Event::assertNotDispatched(EstatePriceChanged::class);
+        Event::assertNotDispatched(EstateRefundPercentageChanged::class);
+        Event::assertDispatched(EstatePublished::class);
     }
 }

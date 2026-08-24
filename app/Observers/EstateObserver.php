@@ -3,7 +3,9 @@
 namespace App\Observers;
 
 use App\Events\EstateCreated;
+use App\Events\EstatePriceChanged;
 use App\Events\EstatePublished;
+use App\Events\EstateRefundPercentageChanged;
 use App\Models\Estate;
 use App\Models\EstateDocument;
 use App\Services\CurrencyRateService;
@@ -160,7 +162,27 @@ class EstateObserver
      */
     public function updated(Estate $estate): void
     {
-        if (App::make(EstateTelegramPublicationPolicy::class)->becameReady($estate)) {
+        $publicationPolicy = App::make(EstateTelegramPublicationPolicy::class);
+
+        if ($publicationPolicy->wasReady($estate) && $publicationPolicy->isReady($estate)) {
+            if ($estate->wasChanged('price_amd')) {
+                EstatePriceChanged::dispatch(
+                    $estate,
+                    $estate->getRawOriginal('price_amd'),
+                    $estate->price_amd
+                );
+            }
+
+            if ($estate->wasChanged('refund_percentage')) {
+                EstateRefundPercentageChanged::dispatch(
+                    $estate,
+                    $estate->getRawOriginal('refund_percentage'),
+                    $estate->refund_percentage
+                );
+            }
+        }
+
+        if ($publicationPolicy->becameReady($estate)) {
             EstatePublished::dispatch($estate);
         }
     }
