@@ -59,8 +59,8 @@ class EstateRequest extends FormRequest
                 'required_if:contract_type,' . ContractType::DAILY_RENT->value,
             ],
             'location_province' => 'required',
-            'location_city' => 'required_unless:location_province,1',
-            'location_community' => 'required_if:location_province,1',
+            'location_city' => 'required',
+            'location_community' => 'required',
             'location_street' => 'required',
             'address_building' => 'required',
             'address_apartment' => [
