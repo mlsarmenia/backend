@@ -476,7 +476,9 @@ trait AddEstateCreateCommonFields
             'name' => 'url',
             'label' => 'URL',
             'type' => 'copy_url',
-            'value' => config('app.frontend_url') . '/estates/' . $this->crud->entry?->id,
+            'value' => $this->crud->entry?->id
+                ? route('estates.show', ['estate' => $this->crud->entry->id])
+                : null,
             'tab' => 'Լրացուցիչ',
             'wrapper' => [
                 'class' => 'form-group col-md-4',
