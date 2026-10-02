@@ -123,7 +123,7 @@ restore_application() {
 }
 trap restore_application EXIT
 
-for command in composer flock git php rsync tar; do
+for command in composer flock git php realpath rsync tar; do
     command -v "$command" >/dev/null
 done
 
@@ -133,6 +133,9 @@ for path in "$APP_DIR" "$APP_DIR/.env" "$APP_DIR/storage" "$GIT_IDENTITY" "$GIT_
         exit 1
     fi
 done
+
+APP_REAL_DIR="$(realpath -e "$APP_DIR")"
+readonly APP_REAL_DIR
 
 install -d -m 700 "$DEPLOY_ROOT" "$RELEASES_DIR" "$ROLLBACK_DIR"
 
@@ -216,7 +219,7 @@ if [[ -f "$MANIFEST_FILE" ]]; then
         esac
 
         target_path="$(realpath -m "${APP_DIR}/${obsolete_path}")"
-        if [[ "$target_path" != "${APP_DIR}/"* ]]; then
+        if [[ "$target_path" != "${APP_REAL_DIR}/"* ]]; then
             echo "Refusing to remove unsafe deployment path: ${obsolete_path}"
             exit 1
         fi
@@ -224,7 +227,7 @@ if [[ -f "$MANIFEST_FILE" ]]; then
         rm -f -- "$target_path"
 
         parent_path="$(dirname "$target_path")"
-        while [[ "$parent_path" == "${APP_DIR}/"* ]]; do
+        while [[ "$parent_path" == "${APP_REAL_DIR}/"* ]]; do
             if ! rmdir --ignore-fail-on-non-empty "$parent_path" 2>/dev/null; then
                 break
             fi
