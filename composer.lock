@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fafcbded0012b6de58562cbe3bdf86e9",
+    "content-hash": "84e707b10889b7771f887b93d218f67d",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -940,12 +940,12 @@
             "version": "v1.0.24",
             "source": {
                 "type": "git",
-                "url": "https://github.com/creativeorange/gravatar.git",
+                "url": "https://github.com/brainpink/gravatar.git",
                 "reference": "ec0d78c7d4ef6d66c3cc09b6a03ab8d53e44379f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/creativeorange/gravatar/zipball/ec0d78c7d4ef6d66c3cc09b6a03ab8d53e44379f",
+                "url": "https://api.github.com/repos/brainpink/gravatar/zipball/ec0d78c7d4ef6d66c3cc09b6a03ab8d53e44379f",
                 "reference": "ec0d78c7d4ef6d66c3cc09b6a03ab8d53e44379f",
                 "shasum": ""
             },
@@ -4112,12 +4112,12 @@
             "version": "3.8.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/briannesbitt/Carbon.git",
+                "url": "https://github.com/CarbonPHP/carbon.git",
                 "reference": "129700ed449b1f02d70272d2ac802357c8c30c58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/129700ed449b1f02d70272d2ac802357c8c30c58",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/129700ed449b1f02d70272d2ac802357c8c30c58",
                 "reference": "129700ed449b1f02d70272d2ac802357c8c30c58",
                 "shasum": ""
             },
@@ -9710,12 +9710,12 @@
             "version": "v3.14.10",
             "source": {
                 "type": "git",
-                "url": "https://github.com/barryvdh/laravel-debugbar.git",
+                "url": "https://github.com/fruitcake/laravel-debugbar.git",
                 "reference": "56b9bd235e3fe62e250124804009ce5bab97cc63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/56b9bd235e3fe62e250124804009ce5bab97cc63",
+                "url": "https://api.github.com/repos/fruitcake/laravel-debugbar/zipball/56b9bd235e3fe62e250124804009ce5bab97cc63",
                 "reference": "56b9bd235e3fe62e250124804009ce5bab97cc63",
                 "shasum": ""
             },
@@ -13033,10 +13033,11 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.3.0",
+        "php": "^8.2",
         "ext-pdo": "*",
-        "ext-zip": "*"
+        "ext-zip": "*",
+        "ext-soap": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

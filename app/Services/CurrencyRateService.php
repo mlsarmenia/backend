@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class CurrencyRateService
 {
-    private const string CACHE_KEY = 'currency_rates';
+    private const CACHE_KEY = 'currency_rates';
 
     public function getRates(): array
     {
