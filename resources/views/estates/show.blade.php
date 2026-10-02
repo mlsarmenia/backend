@@ -144,6 +144,34 @@
                 </section>
             </div>
 
+            @if($buildingDetails)
+                <section class="estate__details" aria-labelledby="estate-building-details-title">
+                    <h2 id="estate-building-details-title">Շենքի տվյալներ</h2>
+                    <dl class="estate__detail-grid">
+                        @foreach($buildingDetails as $detail)
+                            <div class="estate__detail">
+                                <dt>{{ $detail['label'] }}</dt>
+                                <dd>{{ $detail['value'] }}</dd>
+                            </div>
+                        @endforeach
+                    </dl>
+                </section>
+            @endif
+
+            @if($amenities)
+                <section class="estate__details" aria-labelledby="estate-amenities-title">
+                    <h2 id="estate-amenities-title">Կոմունալ հարմարություններ</h2>
+                    <ul class="estate__amenities">
+                        @foreach($amenities as $amenity)
+                            <li class="estate__amenity">
+                                <span aria-hidden="true">✓</span>
+                                {{ $amenity }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </section>
+            @endif
+
             @if($estate->public_text_arm)
                 <section class="estate__description" aria-labelledby="estate-description-title">
                     <h2 id="estate-description-title">Նկարագրություն</h2>
