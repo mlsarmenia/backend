@@ -88,7 +88,11 @@ restore_application() {
     fi
 
     if [[ "$maintenance_enabled" == "true" ]]; then
-        cd "$APP_DIR"
+        if [[ -n "$release_dir" && -f "${release_dir}/artisan" ]]; then
+            cd "$release_dir"
+        else
+            cd "$APP_DIR"
+        fi
         php artisan up
         if [[ $? -ne 0 ]]; then
             rm -f storage/framework/down
@@ -196,8 +200,8 @@ rsync -a --delete \
     "${ROLLBACK_DIR}/"
 rollback_ready=true
 
-cd "$APP_DIR"
-if [[ ! -f storage/framework/down ]]; then
+if [[ ! -f "$APP_DIR/storage/framework/down" ]]; then
+    cd "$release_dir"
     php artisan down --retry=60
     maintenance_enabled=true
 fi
@@ -251,6 +255,7 @@ rsync -a --delete \
     "${release_dir}/vendor/" \
     "${APP_DIR}/vendor/"
 
+cd "$APP_DIR"
 php artisan migrate --force --no-interaction
 php artisan optimize:clear
 php artisan config:cache
