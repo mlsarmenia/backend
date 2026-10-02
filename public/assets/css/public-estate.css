@@ -1,0 +1,379 @@
+:root {
+    color-scheme: light;
+    font-family: Arial, "Noto Sans Armenian", sans-serif;
+    font-size: 16px;
+    color: #1f2933;
+    background: #f4f6f8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    background: #f4f6f8;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.site-header {
+    border-bottom: 1px solid #dce2e8;
+    background: #ffffff;
+}
+
+.site-header__inner {
+    width: min(1320px, calc(100% - 48px));
+    min-height: 64px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.brand {
+    color: #1f2933;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.estate-page {
+    width: min(1320px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 36px 0 64px;
+}
+
+.estate {
+    min-width: 0;
+}
+
+.estate__header {
+    max-width: 980px;
+    margin-bottom: 28px;
+}
+
+.estate__eyebrow {
+    margin: 0 0 10px;
+    color: #5c6975;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.estate__header h1 {
+    margin: 0;
+    color: #17212b;
+    font-size: 30px;
+    font-weight: 650;
+    line-height: 1.32;
+    letter-spacing: 0;
+}
+
+.estate__location {
+    margin: 10px 0 0;
+    color: #5c6975;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.estate__main {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(320px, 2fr);
+    gap: 40px;
+    align-items: start;
+}
+
+.gallery {
+    min-width: 0;
+}
+
+.gallery__stage {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: 1px solid #d8dee4;
+    border-radius: 6px;
+    background: #20262d;
+}
+
+.gallery__slide {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.gallery__slide[hidden] {
+    display: none;
+}
+
+.gallery__slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.gallery__control {
+    position: absolute;
+    top: 50%;
+    width: 46px;
+    height: 52px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    color: #17212b;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+    font-size: 42px;
+    line-height: 46px;
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+
+.gallery__control:hover,
+.gallery__control:focus-visible {
+    background: #ffffff;
+}
+
+.gallery__control:focus-visible,
+.gallery__thumbnail:focus-visible {
+    outline: 3px solid #2166d1;
+    outline-offset: 2px;
+}
+
+.gallery__control--previous {
+    left: 14px;
+}
+
+.gallery__control--next {
+    right: 14px;
+}
+
+.gallery__counter {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    min-width: 56px;
+    padding: 7px 10px;
+    border-radius: 4px;
+    color: #ffffff;
+    background: rgba(17, 24, 39, 0.78);
+    font-size: 13px;
+    text-align: center;
+}
+
+.gallery__thumbnails {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 92px;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 12px 2px 4px;
+    scrollbar-width: thin;
+}
+
+.gallery__thumbnail {
+    width: 92px;
+    height: 68px;
+    overflow: hidden;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background: #dce2e8;
+    cursor: pointer;
+}
+
+.gallery__thumbnail.is-active {
+    border-color: #16836f;
+}
+
+.gallery__thumbnail img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery__empty {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    border: 1px solid #d8dee4;
+    border-radius: 6px;
+    color: #697784;
+    background: #e9edf1;
+}
+
+.estate__summary {
+    min-width: 0;
+    border-top: 4px solid #16836f;
+    padding-top: 24px;
+}
+
+.estate__summary-heading {
+    padding-bottom: 22px;
+    border-bottom: 1px solid #dce2e8;
+}
+
+.estate__contract {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: #ffffff;
+    background: #16836f;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.estate__price {
+    margin: 18px 0 0;
+    color: #17212b;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.estate__facts {
+    margin: 0;
+}
+
+.estate__fact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: baseline;
+    padding: 15px 0;
+    border-bottom: 1px solid #e2e7ec;
+}
+
+.estate__fact dt {
+    color: #697784;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.estate__fact dd {
+    margin: 0;
+    color: #1f2933;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: right;
+}
+
+.estate__description {
+    max-width: 900px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid #dce2e8;
+}
+
+.estate__description h2 {
+    margin: 0 0 16px;
+    color: #17212b;
+    font-size: 22px;
+    line-height: 1.35;
+    letter-spacing: 0;
+}
+
+.estate__description div {
+    color: #394652;
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+@media (max-width: 900px) {
+    .site-header__inner,
+    .estate-page {
+        width: min(100% - 32px, 760px);
+    }
+
+    .estate-page {
+        padding-top: 28px;
+    }
+
+    .estate__header h1 {
+        font-size: 26px;
+    }
+
+    .estate__main {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+    }
+}
+
+@media (max-width: 520px) {
+    .site-header__inner,
+    .estate-page {
+        width: calc(100% - 24px);
+    }
+
+    .site-header__inner {
+        min-height: 56px;
+    }
+
+    .estate-page {
+        padding: 22px 0 44px;
+    }
+
+    .estate__header {
+        margin-bottom: 20px;
+    }
+
+    .estate__header h1 {
+        font-size: 23px;
+    }
+
+    .estate__price {
+        font-size: 24px;
+    }
+
+    .gallery__control {
+        width: 40px;
+        height: 46px;
+        font-size: 36px;
+        line-height: 40px;
+    }
+
+    .gallery__control--previous {
+        left: 8px;
+    }
+
+    .gallery__control--next {
+        right: 8px;
+    }
+
+    .estate__fact {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 4px;
+    }
+
+    .estate__fact dd {
+        text-align: left;
+    }
+
+    .estate__description {
+        margin-top: 38px;
+    }
+}
+
+@media print {
+    body {
+        background: #ffffff;
+    }
+
+    .site-header,
+    .gallery__control,
+    .gallery__thumbnails,
+    .gallery__counter {
+        display: none;
+    }
+
+    .estate-page {
+        width: 100%;
+        padding: 0;
+    }
+}

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PublicEstateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/estates/{estate}', [PublicEstateController::class, 'show'])
+    ->whereNumber('estate')
+    ->name('estates.show');
 
 Route::get('/', function () {
     return redirect('/admin');
