@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Estate;
 use App\Scopes\EstateScope;
+use App\Services\PublicEstateDetailsService;
 use Illuminate\Contracts\View\View;
 
 class PublicEstateController extends Controller
 {
-    public function show(int $estate): View
+    public function show(int $estate, PublicEstateDetailsService $detailsService): View
     {
         $estate = Estate::withoutGlobalScope(EstateScope::class)
             ->whereKey($estate)
@@ -25,6 +26,8 @@ class PublicEstateController extends Controller
             ->firstOrFail();
 
         return view('estates.show', [
+            'amenities' => $detailsService->amenities($estate),
+            'buildingDetails' => $detailsService->buildingDetails($estate),
             'estate' => $estate,
         ]);
     }

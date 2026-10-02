@@ -264,6 +264,80 @@ input {
     text-align: right;
 }
 
+.estate__details {
+    max-width: 1100px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid #dce2e8;
+}
+
+.estate__details h2 {
+    margin: 0 0 20px;
+    color: #17212b;
+    font-size: 22px;
+    line-height: 1.35;
+    letter-spacing: 0;
+}
+
+.estate__detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 40px;
+    margin: 0;
+}
+
+.estate__detail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(120px, auto);
+    gap: 20px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 1px solid #e2e7ec;
+}
+
+.estate__detail dt {
+    color: #697784;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.estate__detail dd {
+    margin: 0;
+    color: #1f2933;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: right;
+}
+
+.estate__amenities {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.estate__amenity {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    min-width: 0;
+    padding: 13px 0;
+    border-bottom: 1px solid #e2e7ec;
+    color: #394652;
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+.estate__amenity span {
+    flex: 0 0 auto;
+    color: #16836f;
+    font-size: 17px;
+    font-weight: 700;
+}
+
 .estate__description {
     max-width: 900px;
     margin-top: 48px;
@@ -302,6 +376,10 @@ input {
     .estate__main {
         grid-template-columns: minmax(0, 1fr);
         gap: 32px;
+    }
+
+    .estate__amenities {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -352,6 +430,25 @@ input {
     }
 
     .estate__fact dd {
+        text-align: left;
+    }
+
+    .estate__details {
+        margin-top: 38px;
+        padding-top: 26px;
+    }
+
+    .estate__detail-grid,
+    .estate__amenities {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .estate__detail {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 4px;
+    }
+
+    .estate__detail dd {
         text-align: left;
     }
 
