@@ -154,6 +154,10 @@ class PublicEstatePageTest extends TestCase
             ->assertSeeInOrder(['Կոդ՝ 013-295', 'Վաճառք'])
             ->assertSee('Հրապարակային նկարագրություն')
             ->assertSee('public-photo.jpg')
+            ->assertSee('data-gallery-expand', false)
+            ->assertSee('data-gallery-lightbox', false)
+            ->assertSee('data-gallery-close', false)
+            ->assertDontSee('<button class="gallery__lightbox-control gallery__lightbox-control--next"', false)
             ->assertSee('Շենքի տվյալներ')
             ->assertSee('Շենքի կառուցվածք')
             ->assertSee('Երկաթբետոնե')
@@ -184,8 +188,35 @@ class PublicEstatePageTest extends TestCase
 
         $this->get('/estates/303')
             ->assertOk()
+            ->assertDontSee('<button class="gallery__expand"', false)
+            ->assertDontSee('<dialog class="gallery__lightbox"', false)
             ->assertDontSee('Շենքի տվյալներ')
             ->assertDontSee('Կոմունալ հարմարություններ');
+    }
+
+    public function test_gallery_navigation_includes_only_public_photos(): void
+    {
+        DB::table('estate')->insert([
+            'id' => 304,
+            'market_type' => EstateMarketType::SECONDARY->value,
+            'estate_status_id' => 1,
+            'is_published' => true,
+        ]);
+
+        DB::table('estate_document')->insert([
+            ['id' => 3, 'estate_id' => 304, 'path' => 'first.jpg', 'is_public' => true, 'position' => 1],
+            ['id' => 4, 'estate_id' => 304, 'path' => 'second.jpg', 'is_public' => true, 'position' => 2],
+            ['id' => 5, 'estate_id' => 304, 'path' => 'private.jpg', 'is_public' => false, 'position' => 3],
+        ]);
+
+        $this->get('/estates/304')
+            ->assertOk()
+            ->assertSee('first.jpg')
+            ->assertSee('second.jpg')
+            ->assertDontSee('private.jpg')
+            ->assertSee('data-gallery-lightbox-previous', false)
+            ->assertSee('data-gallery-lightbox-next', false)
+            ->assertSee('data-gallery-lightbox-counter', false);
     }
 
     public function test_unpublished_estate_is_not_publicly_available(): void

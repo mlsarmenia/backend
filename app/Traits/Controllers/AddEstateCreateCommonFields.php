@@ -466,6 +466,7 @@ trait AddEstateCreateCommonFields
             'name' => 'is_published',
             'type' => 'switch',
             'label' => 'Հրապարակել',
+            'default' => $this->crud->getCurrentEntry() ? 0 : 1,
             'tab' => 'Լրացուցիչ',
             'wrapper' => [
                 'class' => 'form-group col-md-2',
