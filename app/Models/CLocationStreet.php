@@ -9,6 +9,7 @@ namespace App\Models;
 use App\Traits\ApiMultiLanguage;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -84,6 +85,20 @@ class CLocationStreet extends Model
 		'city_id',
 		'parent_is_community'
 	];
+
+    public function scopeForCity(Builder $query, int|string $cityId): Builder
+    {
+        return $query
+            ->where('parent_is_community', false)
+            ->where(function (Builder $query) use ($cityId) {
+                $query->where('city_id', $cityId)
+                    ->orWhere(function (Builder $query) use ($cityId) {
+                        // Imported streets predate city_id and still use parent_id.
+                        $query->whereNull('city_id')
+                            ->where('parent_id', $cityId);
+                    });
+            });
+    }
 
 	public function announcements()
 	{

@@ -487,11 +487,11 @@ class RenterCrudController extends CrudController
                 if ($search && $communityId) {
                     return $model->where('parent_is_community', true)->where('community_id', '=', $communityId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } elseif ($search && $cityId) {
-                    return $model->where('parent_is_community', false)->where('parent_id', '=', $cityId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
+                    return $model->forCity($cityId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
                 } elseif ($communityId) {
                     return $model->where('parent_is_community', true)->where('community_id', '=', $communityId);
                 } elseif ($cityId) {
-                    return $model->where('parent_is_community', false)->where('parent_id', '=', $cityId);
+                    return $model->forCity($cityId);
                 } else {
                     return $model->where('id', '<', 0);
                 }

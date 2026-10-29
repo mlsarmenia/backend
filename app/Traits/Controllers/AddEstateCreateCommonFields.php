@@ -198,7 +198,7 @@ trait AddEstateCreateCommonFields
             'attribute' => "name_arm",
             'ajax' => true,
             'minimum_input_length' => 0,
-            'dependencies' => ['location_province'],
+            'dependencies' => ['location_province', 'location_city', 'location_community'],
             'label' => "Փողոց",
             'placeholder' => '-Ընտրել մեկը-',
             'attributes' => ['required' => 'required'],
