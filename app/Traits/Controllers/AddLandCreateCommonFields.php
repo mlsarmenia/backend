@@ -166,6 +166,7 @@ trait AddLandCreateCommonFields
             'minimum_input_length' => 0,
             'include_all_form_fields' => true,
             'label' => "Քաղաք",
+            'showAsterisk' => true,
             'dependencies' => ['location_province'],
             'placeholder' => '-Ընտրել մեկը-',
             'wrapper' => [
@@ -181,6 +182,7 @@ trait AddLandCreateCommonFields
             'minimum_input_length' => 0,
             'dependencies' => ['location_province'],
             'label' => "Համայնք",
+            'showAsterisk' => true,
             'placeholder' => '-Ընտրել մեկը-',
             'wrapper' => [
                 'class' => 'form-group col-md-3'
@@ -244,6 +246,7 @@ trait AddLandCreateCommonFields
             'name' => 'area_total',
             'type' => "number",
             'label' => "Ընդհանուր մակերես",
+            'attributes' => ['step' => 'any'],
             'wrapper' => [
                 'class' => 'form-group col-md-2'
             ],
@@ -756,6 +759,7 @@ trait AddLandCreateCommonFields
             'name' => 'temporary_photos',
             'label' => 'Նկարներ',
             'type' => "dropzone",
+            'attributes' => ['required' => 'required'],
             'configuration' => [
                 'parallelUploads' => 10,
                 'uploadMultiple' => true,

@@ -2,13 +2,15 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\ContractType;
 use App\Http\Requests\Concerns\ValidatesEstateNumericFields;
+use App\Http\Requests\Concerns\ValidatesEstatePhotos;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class LandRequest extends FormRequest
 {
     use ValidatesEstateNumericFields;
+    use ValidatesEstatePhotos;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -29,13 +31,30 @@ class LandRequest extends FormRequest
     public function rules()
     {
         return $this->withEstateNumericRules([
-             'contract_type' => 'required',
-             'estate_status' => 'required',
-             'location_province' => 'required',
-             'location_city' => 'required_unless:location_province,1',
-             'location_community' => 'required_if:location_province,1',
-             'location_street' => 'required',
-             'address_building' => 'required_if:estate_status,2,3,4,5,6,7,8',
+            'contract_type' => 'required',
+            'estate_status' => 'required',
+            'seller' => 'required_if:contract_type,' . ContractType::SALE->value,
+            'owner' => [
+                'required_if:contract_type,' . ContractType::RENT->value,
+                'required_if:contract_type,' . ContractType::DAILY_RENT->value,
+            ],
+            'location_province' => 'required',
+            'location_city' => 'required_unless:location_province,1',
+            'location_community' => 'required_if:location_province,1',
+            'location_street' => 'required',
+            'address_building' => 'required_if:estate_status,2,3,4,5,6,7,8',
+            'area_total' => 'required',
+            'price_amd' => 'required',
+            'refund_percentage' => 'required',
+            'land_type' => 'required',
+            'land_structure_type' => 'required',
+            'fence_type' => 'required',
+            'front_with_street' => 'required',
+            'front_length' => ['required', 'numeric', 'min:0'],
+            'arch_project_package' => 'required|in:0,1',
+            'arch_project' => 'required|in:0,1',
+            'building_permit' => 'required|in:0,1',
+            'temporary_photos' => ['required', $this->requiresPhotosAndMainSelection()],
             'address_apartment' => [
                 function ($attribute, $value, $fail) {
                     $estate_status = (int)$this->input('estate_status');
@@ -45,7 +64,7 @@ class LandRequest extends FormRequest
                         $fail($attribute . ' is required.');
                     }
                 },
-            ]
+            ],
 
         ]);
     }
