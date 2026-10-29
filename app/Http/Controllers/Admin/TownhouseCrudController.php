@@ -102,7 +102,7 @@ class TownhouseCrudController extends CrudController
     {
 //        $this->authorize('create', Estate::class);
         CRUD::setValidation(EstateRequest::class);
-        Widget::add()->type('script')->content('assets/js/admin/forms/estate.js');
+        Widget::add()->type('script')->content('assets/js/admin/forms/estate-v2.js');
 
         $this->addHouseFields();
 

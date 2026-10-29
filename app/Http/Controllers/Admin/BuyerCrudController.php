@@ -104,7 +104,7 @@ class BuyerCrudController extends CrudController
         $user = Auth::user();
         $realtor = $user->professional;
 
-        Widget::add()->type('script')->content('assets/js/admin/forms/estate.js');
+        Widget::add()->type('script')->content('assets/js/admin/forms/estate-v2.js');
         CRUD::addField([
             'name' => 'contact_type',
             'type' => "relationship",

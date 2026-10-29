@@ -95,7 +95,7 @@ class RenterCrudController extends CrudController
         $this->crud->setCreateContentClass('col-md-8');
 //        $this->authorize('create', Contact::class);
 
-        Widget::add()->type('script')->content('assets/js/admin/forms/estate.js');
+        Widget::add()->type('script')->content('assets/js/admin/forms/estate-v2.js');
         CRUD::addField([
             'name' => 'contact_type',
             'type' => "relationship",
