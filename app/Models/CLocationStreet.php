@@ -88,16 +88,19 @@ class CLocationStreet extends Model
 
     public function scopeForCity(Builder $query, int|string $cityId): Builder
     {
-        return $query
-            ->where('parent_is_community', false)
-            ->where(function (Builder $query) use ($cityId) {
-                $query->where('city_id', $cityId)
-                    ->orWhere(function (Builder $query) use ($cityId) {
-                        // Imported streets predate city_id and still use parent_id.
-                        $query->whereNull('city_id')
-                            ->where('parent_id', $cityId);
-                    });
-            });
+        return $query->where(function (Builder $query) use ($cityId) {
+            $query->where('city_id', $cityId)
+                ->orWhere(function (Builder $query) use ($cityId) {
+                    // Imported city streets can lack both newer discriminator columns.
+                    $query->whereNull('city_id')
+                        ->whereNull('community_id')
+                        ->where('parent_id', $cityId)
+                        ->where(function (Builder $query) {
+                            $query->where('parent_is_community', false)
+                                ->orWhereNull('parent_is_community');
+                        });
+                });
+        });
     }
 
 	public function announcements()

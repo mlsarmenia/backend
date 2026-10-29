@@ -46,7 +46,7 @@ class CLocationStreetTest extends TestCase
                 'city_id' => null,
                 'community_id' => null,
                 'parent_id' => 42,
-                'parent_is_community' => false,
+                'parent_is_community' => null,
                 'name_arm' => 'Legacy city street',
             ],
             [
@@ -64,6 +64,14 @@ class CLocationStreetTest extends TestCase
                 'community_id' => 7,
                 'parent_is_community' => true,
                 'name_arm' => 'Community street',
+            ],
+            [
+                'id' => 5,
+                'city_id' => null,
+                'parent_id' => 42,
+                'community_id' => null,
+                'parent_is_community' => true,
+                'name_arm' => 'Legacy community street',
             ],
         ]);
 
