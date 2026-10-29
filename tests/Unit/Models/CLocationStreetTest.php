@@ -19,6 +19,12 @@ class CLocationStreetTest extends TestCase
         DB::purge('sqlite');
         DB::reconnect('sqlite');
 
+        Schema::create('c_location_city', function (Blueprint $table) {
+            $table->integer('id')->primary();
+            $table->integer('parent_id')->nullable();
+            $table->string('name_arm')->nullable();
+        });
+
         Schema::create('c_location_street', function (Blueprint $table) {
             $table->integer('id')->primary();
             $table->integer('parent_id')->nullable();
@@ -32,6 +38,12 @@ class CLocationStreetTest extends TestCase
 
     public function test_city_scope_returns_modern_and_legacy_streets(): void
     {
+        DB::table('c_location_city')->insert([
+            ['id' => 42, 'parent_id' => 2, 'name_arm' => 'Duplicate city'],
+            ['id' => 84, 'parent_id' => 2, 'name_arm' => 'Duplicate city'],
+            ['id' => 126, 'parent_id' => 3, 'name_arm' => 'Duplicate city'],
+        ]);
+
         DB::table('c_location_street')->insert([
             [
                 'id' => 1,
@@ -81,6 +93,22 @@ class CLocationStreetTest extends TestCase
                 'parent_is_community' => null,
                 'name_arm' => 'Zero-filled legacy city street',
             ],
+            [
+                'id' => 7,
+                'city_id' => 84,
+                'parent_id' => 84,
+                'community_id' => null,
+                'parent_is_community' => false,
+                'name_arm' => 'Street linked to a duplicate city ID',
+            ],
+            [
+                'id' => 8,
+                'city_id' => 126,
+                'parent_id' => 126,
+                'community_id' => null,
+                'parent_is_community' => false,
+                'name_arm' => 'Same city name in another province',
+            ],
         ]);
 
         $streetIds = CLocationStreet::query()
@@ -89,6 +117,6 @@ class CLocationStreetTest extends TestCase
             ->pluck('id')
             ->all();
 
-        $this->assertSame([1, 2, 3, 6], $streetIds);
+        $this->assertSame([1, 2, 3, 6, 7], $streetIds);
     }
 }

@@ -88,11 +88,22 @@ class CLocationStreet extends Model
 
     public function scopeForCity(Builder $query, int|string $cityId): Builder
     {
-        return $query->where(function (Builder $query) use ($cityId) {
-            $query->where('city_id', $cityId)
-                ->orWhere(function (Builder $query) use ($cityId) {
+        $city = CLocationCity::query()->find($cityId, ['parent_id', 'name_arm']);
+        $cityIds = [$cityId];
+
+        if ($city) {
+            $cityIds = CLocationCity::query()
+                ->where('parent_id', $city->parent_id)
+                ->where('name_arm', $city->name_arm)
+                ->pluck('id')
+                ->all();
+        }
+
+        return $query->where(function (Builder $query) use ($cityIds) {
+            $query->whereIn('city_id', $cityIds)
+                ->orWhere(function (Builder $query) use ($cityIds) {
                     // Imported streets use the original city-to-streets parent relation.
-                    $query->where('parent_id', $cityId)
+                    $query->whereIn('parent_id', $cityIds)
                         ->where(function (Builder $query) {
                             $query->where('parent_is_community', false)
                                 ->orWhereNull('parent_is_community');
