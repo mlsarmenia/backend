@@ -56,7 +56,11 @@ input {
     margin-bottom: 28px;
 }
 
-.estate__eyebrow {
+.estate__summary-column {
+    min-width: 0;
+}
+
+.estate__code {
     margin: 0 0 10px;
     color: #5c6975;
     font-size: 14px;
