@@ -216,6 +216,7 @@ class HouseCrudController extends CrudController
             'name' => 'front_length',
             'type' => "number",
             'label' => "Ճակատային դիրքի երկարություն",
+            'attributes' => ['step' => 'any', 'min' => 0],
             'tab' => 'Հիմնական',
             'wrapper' => [
                 'class' => 'form-group col-md-4 apartment_building_attribute'
@@ -448,6 +449,7 @@ class HouseCrudController extends CrudController
             'name' => 'front_length',
             'type' => "number",
             'label' => "Ճակատային դիրքի երկարություն",
+            'attributes' => ['step' => 'any', 'min' => 0],
             'tab' => 'Հիմնական',
             'wrapper' => [
                 'class' => 'form-group col-md-3 apartment_building_attribute'
