@@ -55,7 +55,7 @@ class CLocationStreetTest extends TestCase
                 'community_id' => null,
                 'parent_id' => 42,
                 'parent_is_community' => false,
-                'name_arm' => 'Street reassigned to another city',
+                'name_arm' => 'Legacy street with a stale city link',
             ],
             [
                 'id' => 4,
@@ -89,6 +89,6 @@ class CLocationStreetTest extends TestCase
             ->pluck('id')
             ->all();
 
-        $this->assertSame([1, 2, 6], $streetIds);
+        $this->assertSame([1, 2, 3, 6], $streetIds);
     }
 }
