@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\ContractType;
 use App\Http\Requests\Concerns\ValidatesEstateNumericFields;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class CommercialRequest extends FormRequest
 {
@@ -29,24 +29,40 @@ class CommercialRequest extends FormRequest
     public function rules()
     {
         return $this->withEstateNumericRules([
-             'contract_type' => 'required',
-             'estate_status' => 'required',
-             'location_province' => 'required',
-             'location_city' => 'required_unless:location_province,1',
-             'location_community' => 'required_if:location_province,1',
-             'location_street' => 'required',
-             'address_building' => 'required_if:estate_status,2,3,4,5,6,7,8',
-             'address_apartment' => [
-                function ($attribute, $value, $fail) {
-                    $estate_status = (int)$this->input('estate_status');
-                    $estate_type = (int)$this->input('estate_type_id');
-
-                    if (($estate_status === 4) && ($estate_type === 1) && empty($value)) {
-                        $fail($attribute . ' is required.');
-                    }
-                },
-            ]
-
+            'contract_type' => 'required',
+            'estate_status' => 'required',
+            'seller' => 'required_if:contract_type,' . ContractType::SALE->value,
+            'owner' => [
+                'required_if:contract_type,' . ContractType::RENT->value,
+                'required_if:contract_type,' . ContractType::DAILY_RENT->value,
+            ],
+            'location_province' => 'required',
+            'location_city' => 'required_unless:location_province,1',
+            'location_community' => 'required_if:location_province,1',
+            'location_street' => 'required',
+            'address_building' => 'required',
+            'address_apartment' => 'required_unless:is_separate_building,1',
+            'room_count' => 'required',
+            'area_total' => 'required',
+            'price_amd' => 'required',
+            'refund_percentage' => 'required',
+            'commercial_purpose_type' => 'required',
+            'building_structure_type' => 'required',
+            'building_type' => 'required',
+            'building_floor_type' => 'required',
+            'exterior_design_type' => 'required',
+            'courtyard_improvement' => 'required',
+            'distance_public_objects' => 'required',
+            'year' => 'required',
+            'parking_type' => 'required',
+            'windows_view' => 'required',
+            'building_window_count' => 'required',
+            'repairing_type' => 'required',
+            'separate_entrance_type' => 'required',
+            'vitrage_type' => 'required',
+            'land_structure_type' => 'required_if:is_estate_commercial_land,1',
+            'front_with_street' => 'required_if:is_estate_commercial_land,1',
+            'front_length' => ['required_if:is_estate_commercial_land,1', 'numeric', 'min:0'],
         ]);
     }
 

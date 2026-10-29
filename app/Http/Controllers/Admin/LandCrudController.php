@@ -349,6 +349,7 @@ class LandCrudController extends CrudController
             'name' => 'front_length',
             'type' => "number",
             'label' => "Ճակատային դիրքի երկարություն",
+            'attributes' => ['step' => 'any', 'min' => 0],
             'tab' => 'Հիմնական',
             'wrapper' => [
                 'class' => 'form-group col-md-3 apartment_building_attribute'
@@ -366,8 +367,8 @@ class LandCrudController extends CrudController
             'name' => 'arch_project_package',
             'label' => 'ՃՇՆ փաթեթ',
             'type' => 'select_from_array',
-            'options' => [0 => 'Առկա չէ', 1 => 'Առկա է'],
-            'default' => 0,
+            'options' => ['' => '-Ընտրել մեկը-', 0 => 'Առկա չէ', 1 => 'Առկա է'],
+            'default' => '',
             'tab' => 'Հիմնական',
             'wrapper' => [
                 'class' => 'form-group col-md-4 apartment_building_attribute',
@@ -378,8 +379,8 @@ class LandCrudController extends CrudController
             'name' => 'arch_project',
             'label' => 'Հաստատված ՃՇՆ',
             'type' => 'select_from_array',
-            'options' => [0 => 'Առկա չէ', 1 => 'Առկա է'],
-            'default' => 0,
+            'options' => ['' => '-Ընտրել մեկը-', 0 => 'Առկա չէ', 1 => 'Առկա է'],
+            'default' => '',
             'tab' => 'Հիմնական',
             'wrapper' => [
                 'class' => 'form-group col-md-4 apartment_building_attribute',
@@ -390,8 +391,8 @@ class LandCrudController extends CrudController
             'name' => 'building_permit',
             'label' => 'Շին․ թույլտվություն',
             'type' => 'select_from_array',
-            'options' => [0 => 'Առկա չէ', 1 => 'Առկա է'],
-            'default' => 0,
+            'options' => ['' => '-Ընտրել մեկը-', 0 => 'Առկա չէ', 1 => 'Առկա է'],
+            'default' => '',
             'tab' => 'Հիմնական',
             'wrapper' => [
                 'class' => 'form-group col-md-4 apartment_building_attribute'

@@ -262,7 +262,9 @@ class CommercialCrudController extends CrudController
                 'name' => $buildingAttribute,
                 'type' => 'relationship',
                 'attribute' => "name_arm",
-                'label' => trans('estate.' . $buildingAttribute),
+                'label' => $buildingAttribute === 'building_window_count'
+                    ? 'Արտաքին պատուհանների քանակ'
+                    : trans('estate.' . $buildingAttribute),
                 'placeholder' => '-Ընտրել մեկը-',
                 'tab' => 'Հիմնական',
                 'wrapper' => [
@@ -394,6 +396,7 @@ class CommercialCrudController extends CrudController
                 'type' => 'relationship',
                 'attribute' => "name_arm",
                 'label' => trans('estate.' . $landAttribute),
+                'showAsterisk' => in_array($landAttribute, ['land_structure_type', 'front_with_street'], true),
                 'placeholder' => '-Ընտրել մեկը-',
                 'tab' => 'Հիմնական',
                 'wrapper' => [
@@ -408,6 +411,8 @@ class CommercialCrudController extends CrudController
             'name' => 'front_length',
             'type' => "number",
             'label' => "Ճակատային դիրքի երկարություն",
+            'showAsterisk' => true,
+            'attributes' => ['step' => 'any', 'min' => 0],
             'tab' => 'Հիմնական',
             'wrapper' => [
                 'class' => 'form-group col-md-3 apartment_building_attribute'
