@@ -91,14 +91,8 @@ class CLocationStreet extends Model
         return $query->where(function (Builder $query) use ($cityId) {
             $query->where('city_id', $cityId)
                 ->orWhere(function (Builder $query) use ($cityId) {
-                    // Imported city streets can use null or zero in newer discriminator columns.
-                    $query->where(function (Builder $query) {
-                        $query->whereNull('city_id')->orWhere('city_id', 0);
-                    })
-                        ->where(function (Builder $query) {
-                            $query->whereNull('community_id')->orWhere('community_id', 0);
-                        })
-                        ->where('parent_id', $cityId)
+                    // Imported streets use the original city-to-streets parent relation.
+                    $query->where('parent_id', $cityId)
                         ->where(function (Builder $query) {
                             $query->where('parent_is_community', false)
                                 ->orWhereNull('parent_is_community');
