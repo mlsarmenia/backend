@@ -481,8 +481,8 @@ class RenterCrudController extends CrudController
             'searchOperator' => 'LIKE',
             'query' => function ($model) {
                 $params = collect(request()->input('form'))->pluck('value', 'name');
-                $cityId = $params['location_city'];
-                $communityId = $params['location_community'];
+                $cityId = $params['location_city'] ?? null;
+                $communityId = $params['location_community'] ?? null;
                 $search = request()->input('q') ?? false;
                 if ($search && $communityId) {
                     return $model->where('parent_is_community', true)->where('community_id', '=', $communityId)->whereRaw('CONCAT_WS(" ", `name_eng`, `name_arm`) LIKE ?', ['%' . $search . '%']);
