@@ -68,6 +68,11 @@ class PublicEstatePageTest extends TestCase
             $table->string('name_arm')->nullable();
         });
 
+        Schema::create('c_contract_type', function (Blueprint $table) {
+            $table->integer('id')->primary();
+            $table->string('name_arm')->nullable();
+        });
+
         Schema::create('c_building_structure_type', function (Blueprint $table) {
             $table->integer('id')->primary();
             $table->string('name_arm')->nullable();
@@ -86,6 +91,11 @@ class PublicEstatePageTest extends TestCase
             'name_arm' => 'Բնակարան',
         ]);
 
+        DB::table('c_contract_type')->insert([
+            'id' => 1,
+            'name_arm' => 'Վաճառք',
+        ]);
+
         DB::table('c_building_structure_type')->insert([
             'id' => 1,
             'name_arm' => 'Երկաթբետոնե',
@@ -102,7 +112,9 @@ class PublicEstatePageTest extends TestCase
             'estate_status_id' => 1,
             'is_published' => true,
             'estate_type_id' => 1,
+            'contract_type_id' => 1,
             'building_structure_type_id' => 1,
+            'area_total' => 70,
             'service_amount' => 15_000,
             'service_amount_currency_id' => 1,
             'new_construction' => true,
@@ -139,6 +151,7 @@ class PublicEstatePageTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('Հրապարակված գույք')
+            ->assertSeeInOrder(['Կոդ՝ 013-295', 'Վաճառք'])
             ->assertSee('Հրապարակային նկարագրություն')
             ->assertSee('public-photo.jpg')
             ->assertSee('Շենքի տվյալներ')
@@ -153,6 +166,7 @@ class PublicEstatePageTest extends TestCase
             ->assertDontSee('Օդորակիչ')
             ->assertDontSee('Մշտական ջուր')
             ->assertDontSee('Արտաքին պատեր')
+            ->assertDontSee('1 մ² արժեք')
             ->assertDontSee('39/7')
             ->assertDontSee('Վերադարձ')
             ->assertDontSee('Գործակալ');

@@ -1,7 +1,6 @@
 @php
     $title = trim((string) ($estate->meta_title_arm ?: $estate->short_description ?: 'Անշարժ գույք'));
     $metaDescription = trim((string) ($estate->meta_description_arm ?: $estate->public_text_arm ?: $title));
-    $currency = session('currency', 'AMD');
     $images = $estate->estateDocuments;
     $location = $estate->public_full_address;
 @endphp
@@ -26,16 +25,6 @@
     <main class="estate-page">
         <article class="estate">
             <header class="estate__header">
-                <p class="estate__eyebrow">
-                    @if($estate->estate_type?->name_arm)
-                        {{ $estate->estate_type->name_arm }}
-                    @else
-                        Անշարժ գույք
-                    @endif
-                    @if($estate->code)
-                        <span aria-hidden="true">·</span> Կոդ՝ {{ $estate->code }}
-                    @endif
-                </p>
                 <h1>{{ $title }}</h1>
                 @if($location)
                     <p class="estate__location">{{ $location }}</p>
@@ -83,65 +72,67 @@
                     @endif
                 </section>
 
-                <section class="estate__summary" aria-label="Գույքի հիմնական տվյալներ">
-                    <div class="estate__summary-heading">
-                        @if($estate->contract_type?->name_arm)
-                            <span class="estate__contract">{{ $estate->contract_type->name_arm }}</span>
+                <div class="estate__summary-column">
+                    <p class="estate__code">
+                        {{ $estate->estate_type?->name_arm ?: 'Անշարժ գույք' }}
+                        @if($estate->code)
+                            <span aria-hidden="true">·</span> Կոդ՝ {{ $estate->code }}
                         @endif
-                        @if($estate->full_price)
-                            <p class="estate__price">{{ $estate->full_price }}</p>
-                        @endif
-                    </div>
+                    </p>
 
-                    <dl class="estate__facts">
-                        @if($estate->area_total)
-                            <div class="estate__fact">
-                                <dt>Ընդհանուր մակերես</dt>
-                                <dd>{{ $estate->area_total }} մ²</dd>
-                            </div>
-                        @endif
+                    <section class="estate__summary" aria-label="Գույքի հիմնական տվյալներ">
+                        <div class="estate__summary-heading">
+                            @if($estate->contract_type?->name_arm)
+                                <span class="estate__contract">{{ $estate->contract_type->name_arm }}</span>
+                            @endif
+                            @if($estate->full_price)
+                                <p class="estate__price">{{ $estate->full_price }}</p>
+                            @endif
+                        </div>
 
-                        @if($estate->price_per_square)
-                            <div class="estate__fact">
-                                <dt>1 մ² արժեք</dt>
-                                <dd>{{ number_format($estate->price_per_square, 0, '.', ' ') }} {{ $currency }}</dd>
-                            </div>
-                        @endif
+                        <dl class="estate__facts">
+                            @if($estate->area_total)
+                                <div class="estate__fact">
+                                    <dt>Ընդհանուր մակերես</dt>
+                                    <dd>{{ $estate->area_total }} մ²</dd>
+                                </div>
+                            @endif
 
-                        @if($estate->room_count)
-                            <div class="estate__fact">
-                                <dt>{{ $estate->estate_type_id === 3 ? 'Սրահներ' : 'Սենյակներ' }}</dt>
-                                <dd>
-                                    {{ $estate->room_count }}
-                                    @if($estate->room_count_modified)
-                                        / {{ $estate->room_count_modified }}
-                                    @endif
-                                </dd>
-                            </div>
-                        @endif
+                            @if($estate->room_count)
+                                <div class="estate__fact">
+                                    <dt>{{ $estate->estate_type_id === 3 ? 'Սրահներ' : 'Սենյակներ' }}</dt>
+                                    <dd>
+                                        {{ $estate->room_count }}
+                                        @if($estate->room_count_modified)
+                                            / {{ $estate->room_count_modified }}
+                                        @endif
+                                    </dd>
+                                </div>
+                            @endif
 
-                        @if($estate->floor || $estate->building_floor_count)
-                            <div class="estate__fact">
-                                <dt>Հարկ</dt>
-                                <dd>{{ $estate->floor ?: '—' }}@if($estate->building_floor_count) / {{ $estate->building_floor_count }}@endif</dd>
-                            </div>
-                        @endif
+                            @if($estate->floor || $estate->building_floor_count)
+                                <div class="estate__fact">
+                                    <dt>Հարկ</dt>
+                                    <dd>{{ $estate->floor ?: '—' }}@if($estate->building_floor_count) / {{ $estate->building_floor_count }}@endif</dd>
+                                </div>
+                            @endif
 
-                        @if($estate->ceiling_height_type?->name_arm)
-                            <div class="estate__fact">
-                                <dt>Առաստաղի բարձրություն</dt>
-                                <dd>{{ $estate->ceiling_height_type->name_arm }}</dd>
-                            </div>
-                        @endif
+                            @if($estate->ceiling_height_type?->name_arm)
+                                <div class="estate__fact">
+                                    <dt>Առաստաղի բարձրություն</dt>
+                                    <dd>{{ $estate->ceiling_height_type->name_arm }}</dd>
+                                </div>
+                            @endif
 
-                        @if($estate->is_separate_building)
-                            <div class="estate__fact">
-                                <dt>Շինություն</dt>
-                                <dd>Առանձին</dd>
-                            </div>
-                        @endif
-                    </dl>
-                </section>
+                            @if($estate->is_separate_building)
+                                <div class="estate__fact">
+                                    <dt>Շինություն</dt>
+                                    <dd>Առանձին</dd>
+                                </div>
+                            @endif
+                        </dl>
+                    </section>
+                </div>
             </div>
 
             @if($buildingDetails)
