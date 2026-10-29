@@ -73,6 +73,14 @@ class CLocationStreetTest extends TestCase
                 'parent_is_community' => true,
                 'name_arm' => 'Legacy community street',
             ],
+            [
+                'id' => 6,
+                'city_id' => 0,
+                'parent_id' => 42,
+                'community_id' => 0,
+                'parent_is_community' => null,
+                'name_arm' => 'Zero-filled legacy city street',
+            ],
         ]);
 
         $streetIds = CLocationStreet::query()
@@ -81,6 +89,6 @@ class CLocationStreetTest extends TestCase
             ->pluck('id')
             ->all();
 
-        $this->assertSame([1, 2], $streetIds);
+        $this->assertSame([1, 2, 6], $streetIds);
     }
 }
