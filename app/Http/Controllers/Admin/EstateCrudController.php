@@ -217,7 +217,7 @@ class EstateCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(EstateRequest::class);
-        Widget::add()->type('script')->content('assets/js/admin/forms/estate.js');
+        Widget::add()->type('script')->content('assets/js/admin/forms/estate-v2.js');
 
         $this->addApartmentFields();
         $this->addCreateCommonFields(1);

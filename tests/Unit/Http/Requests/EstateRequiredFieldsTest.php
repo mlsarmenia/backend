@@ -58,19 +58,22 @@ class EstateRequiredFieldsTest extends TestCase
         $this->assertFalse($validator->fails());
     }
 
-    public function test_yerevan_requires_both_city_and_community(): void
+    public function test_non_yerevan_does_not_require_community(): void
+    {
+        $this->assertFalse($this->validator($this->validInput())->fails());
+    }
+
+    public function test_yerevan_requires_community_but_not_city(): void
     {
         $input = $this->validInput();
         $input['location_province'] = 1;
         unset($input['location_city']);
+        $input['location_community'] = 5;
 
         $validator = $this->validator($input);
 
-        $this->assertTrue($validator->fails());
-        $this->assertTrue($validator->errors()->has('location_city'));
+        $this->assertFalse($validator->fails());
 
-        $input = $this->validInput();
-        $input['location_province'] = 1;
         unset($input['location_community']);
 
         $validator = $this->validator($input);
@@ -86,7 +89,6 @@ class EstateRequiredFieldsTest extends TestCase
             ['agent'],
             ['location_province'],
             ['location_city'],
-            ['location_community'],
             ['location_street'],
             ['address_building'],
             ['floor'],
@@ -134,7 +136,6 @@ class EstateRequiredFieldsTest extends TestCase
             'seller' => 1,
             'location_province' => 2,
             'location_city' => 3,
-            'location_community' => 5,
             'location_street' => 4,
             'address_building' => '15',
             'address_apartment' => '8',

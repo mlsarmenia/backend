@@ -1,6 +1,7 @@
 crud.field('location_province').onChange(function(field) {
-    crud.field('location_community').show(field.value == 1);
-    crud.field('location_city').hide(field.value == 1);
+    const isYerevan = field.value == 1;
+    crud.field('location_community').show(isYerevan).enable(isYerevan);
+    crud.field('location_city').hide(isYerevan).enable(!isYerevan);
 }).change();
 
 crud.field('is_separate_building').onChange(function(field) {

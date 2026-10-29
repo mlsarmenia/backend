@@ -114,7 +114,7 @@ class CommercialCrudController extends CrudController
             return $input;
         });
 
-        Widget::add()->type('script')->content('assets/js/admin/forms/estate.js');
+        Widget::add()->type('script')->content('assets/js/admin/forms/estate-v2.js');
 
 
         $this->addCommercialFields();

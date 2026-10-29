@@ -277,7 +277,7 @@ class ProfessionalCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(ProfessionalRequest::class);
-        Widget::add()->type('script')->content('assets/js/admin/forms/estate.js');
+        Widget::add()->type('script')->content('assets/js/admin/forms/estate-v2.js');
         $this->crud->setCreateContentClass('col-md-8');
 
         CRUD::addField([
