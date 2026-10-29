@@ -74,7 +74,7 @@ class NumericInputValidationTest extends TestCase
     public function test_estate_requests_accept_valid_and_comma_formatted_prices(string $requestClass): void
     {
         $request = $requestClass::create('/', 'POST', [
-            'area_total' => $requestClass === EstateRequest::class ? 55 : null,
+            'area_total' => 55,
             'price_amd' => '1,234,000',
         ]);
 
