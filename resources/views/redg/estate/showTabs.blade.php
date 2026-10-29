@@ -110,9 +110,9 @@
                     </span>
                     <span class="mr-4">{{ isset($estate->code) ? $estate->code : '' }}</span>
 
+                    @include('redg.estate.partials.public_share_link', ['estate' => $estate])
 
-
-                    <span class="ml-auto"><i class="las la-desktop"></i> {{ isset($estate->visits_count) ? $estate->visits_count : '' }}</span>
+                    <span><i class="las la-desktop"></i> {{ isset($estate->visits_count) ? $estate->visits_count : '' }}</span>
                 </p>
 
                 <p class="text-sm">{{ isset($estate->public_text_arm) ? $estate->public_text_arm : '' }}</p>
