@@ -12,7 +12,8 @@
     <meta name="description" content="{{ $metaDescription }}">
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="{{ route('estates.show', ['estate' => $estate->id]) }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/public-estate.css') }}">
+    <link rel="stylesheet" href="{{ asset('packages/bootstrap-iconpicker/icon-fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/public-estate.css') }}?v={{ filemtime(public_path('assets/css/public-estate.css')) }}">
     <title>{{ $title }}</title>
 </head>
 <body>
@@ -45,9 +46,13 @@
                                 </figure>
                             @endforeach
 
+                            <button class="gallery__expand" type="button" data-gallery-expand aria-label="Բացել լուսանկարը ամբողջ էկրանով" title="Բացել լուսանկարը ամբողջ էկրանով">
+                                <i class="fa fa-expand" aria-hidden="true"></i>
+                            </button>
+
                             @if($images->count() > 1)
-                                <button class="gallery__control gallery__control--previous" type="button" data-gallery-previous aria-label="Նախորդ լուսանկարը" title="Նախորդ լուսանկարը">‹</button>
-                                <button class="gallery__control gallery__control--next" type="button" data-gallery-next aria-label="Հաջորդ լուսանկարը" title="Հաջորդ լուսանկարը">›</button>
+                                <button class="gallery__control gallery__control--previous" type="button" data-gallery-previous aria-label="Նախորդ լուսանկարը" title="Նախորդ լուսանկարը"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+                                <button class="gallery__control gallery__control--next" type="button" data-gallery-next aria-label="Հաջորդ լուսանկարը" title="Հաջորդ լուսանկարը"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
                                 <span class="gallery__counter" aria-live="polite"><span data-gallery-current>1</span> / {{ $images->count() }}</span>
                             @endif
                         </div>
@@ -67,6 +72,22 @@
                                 @endforeach
                             </div>
                         @endif
+
+                        <dialog class="gallery__lightbox" data-gallery-lightbox aria-label="Լուսանկարի դիտում ամբողջ էկրանով">
+                            <div class="gallery__lightbox-inner">
+                                <button class="gallery__lightbox-close" type="button" data-gallery-close aria-label="Փակել ամբողջ էկրանը" title="Փակել ամբողջ էկրանը">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                                <div class="gallery__lightbox-image-wrap">
+                                    <img data-gallery-lightbox-image alt="">
+                                </div>
+                                @if($images->count() > 1)
+                                    <button class="gallery__lightbox-control gallery__lightbox-control--previous" type="button" data-gallery-lightbox-previous aria-label="Նախորդ լուսանկարը" title="Նախորդ լուսանկարը"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+                                    <button class="gallery__lightbox-control gallery__lightbox-control--next" type="button" data-gallery-lightbox-next aria-label="Հաջորդ լուսանկարը" title="Հաջորդ լուսանկարը"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                                    <span class="gallery__lightbox-counter" data-gallery-lightbox-counter aria-live="polite">1 / {{ $images->count() }}</span>
+                                @endif
+                            </div>
+                        </dialog>
                     @else
                         <div class="gallery__empty">Լուսանկարներ դեռ չկան</div>
                     @endif
@@ -177,10 +198,22 @@
             var slides = Array.from(gallery.querySelectorAll('[data-gallery-slide]'));
             var thumbnails = Array.from(gallery.querySelectorAll('[data-gallery-thumbnail]'));
             var current = gallery.querySelector('[data-gallery-current]');
+            var lightbox = gallery.querySelector('[data-gallery-lightbox]');
+            var lightboxImage = gallery.querySelector('[data-gallery-lightbox-image]');
+            var lightboxCounter = gallery.querySelector('[data-gallery-lightbox-counter]');
             var activeIndex = 0;
 
-            if (slides.length < 2) {
+            if (!slides.length) {
                 return;
+            }
+
+            function syncLightbox() {
+                var image = slides[activeIndex].querySelector('img');
+                lightboxImage.src = image.src;
+                lightboxImage.alt = image.alt;
+                if (lightboxCounter) {
+                    lightboxCounter.textContent = (activeIndex + 1) + ' / ' + slides.length;
+                }
             }
 
             function showSlide(index) {
@@ -196,15 +229,68 @@
                     thumbnail.setAttribute('aria-pressed', isActive ? 'true' : 'false');
                 });
 
-                current.textContent = String(activeIndex + 1);
+                if (current) {
+                    current.textContent = String(activeIndex + 1);
+                }
+                if (lightbox.open) {
+                    syncLightbox();
+                }
+            }
+
+            function openLightbox() {
+                syncLightbox();
+                lightbox.showModal();
+                document.body.classList.add('gallery-is-open');
+            }
+
+            gallery.querySelector('[data-gallery-expand]').addEventListener('click', openLightbox);
+            slides.forEach(function (slide) {
+                slide.querySelector('img').addEventListener('click', openLightbox);
+            });
+            gallery.querySelector('[data-gallery-close]').addEventListener('click', function () {
+                lightbox.close();
+            });
+            lightbox.addEventListener('close', function () {
+                document.body.classList.remove('gallery-is-open');
+            });
+
+            if (slides.length < 2) {
+                return;
             }
 
             gallery.querySelector('[data-gallery-previous]').addEventListener('click', function () {
                 showSlide(activeIndex - 1);
             });
-
             gallery.querySelector('[data-gallery-next]').addEventListener('click', function () {
                 showSlide(activeIndex + 1);
+            });
+            gallery.querySelector('[data-gallery-lightbox-previous]').addEventListener('click', function () {
+                showSlide(activeIndex - 1);
+            });
+            gallery.querySelector('[data-gallery-lightbox-next]').addEventListener('click', function () {
+                showSlide(activeIndex + 1);
+            });
+
+            lightbox.addEventListener('keydown', function (event) {
+                if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    showSlide(activeIndex + (event.key === 'ArrowLeft' ? -1 : 1));
+                }
+            });
+
+            var touchStartX = null;
+            lightboxImage.addEventListener('touchstart', function (event) {
+                touchStartX = event.changedTouches[0].clientX;
+            });
+            lightboxImage.addEventListener('touchend', function (event) {
+                if (touchStartX === null) {
+                    return;
+                }
+                var distance = event.changedTouches[0].clientX - touchStartX;
+                touchStartX = null;
+                if (Math.abs(distance) > 50) {
+                    showSlide(activeIndex + (distance < 0 ? 1 : -1));
+                }
             });
 
             thumbnails.forEach(function (thumbnail) {

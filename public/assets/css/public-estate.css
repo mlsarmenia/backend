@@ -16,6 +16,10 @@ body {
     background: #f4f6f8;
 }
 
+body.gallery-is-open {
+    overflow: hidden;
+}
+
 button,
 input {
     font: inherit;
@@ -118,32 +122,42 @@ input {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    cursor: zoom-in;
 }
 
-.gallery__control {
+.gallery__control,
+.gallery__expand {
     position: absolute;
-    top: 50%;
-    width: 46px;
-    height: 52px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
     padding: 0;
     border: 0;
     border-radius: 4px;
     color: #17212b;
     background: rgba(255, 255, 255, 0.92);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
-    font-size: 42px;
-    line-height: 46px;
+    font-size: 18px;
     cursor: pointer;
+}
+
+.gallery__control {
+    top: 50%;
     transform: translateY(-50%);
 }
 
 .gallery__control:hover,
-.gallery__control:focus-visible {
+.gallery__control:focus-visible,
+.gallery__expand:hover,
+.gallery__expand:focus-visible {
     background: #ffffff;
 }
 
 .gallery__control:focus-visible,
-.gallery__thumbnail:focus-visible {
+.gallery__expand:focus-visible,
+.gallery__thumbnail:focus-visible,
+.gallery__lightbox button:focus-visible {
     outline: 3px solid #2166d1;
     outline-offset: 2px;
 }
@@ -154,6 +168,12 @@ input {
 
 .gallery__control--next {
     right: 14px;
+}
+
+.gallery__expand {
+    top: 14px;
+    right: 14px;
+    z-index: 1;
 }
 
 .gallery__counter {
@@ -199,6 +219,105 @@ input {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.gallery__lightbox {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: #ffffff;
+    background: #10151b;
+}
+
+.gallery__lightbox:not([open]) {
+    display: none;
+}
+
+.gallery__lightbox::backdrop {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.gallery__lightbox-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.gallery__lightbox-image-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 64px 72px;
+}
+
+.gallery__lightbox-image-wrap img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    touch-action: pan-y;
+}
+
+.gallery__lightbox-close,
+.gallery__lightbox-control {
+    position: absolute;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.17);
+    font-size: 19px;
+    cursor: pointer;
+}
+
+.gallery__lightbox-close:hover,
+.gallery__lightbox-control:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.gallery__lightbox-close {
+    top: 16px;
+    right: 16px;
+}
+
+.gallery__lightbox-control {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.gallery__lightbox-control--previous {
+    left: 16px;
+}
+
+.gallery__lightbox-control--next {
+    right: 16px;
+}
+
+.gallery__lightbox-counter {
+    position: absolute;
+    right: 50%;
+    bottom: 20px;
+    min-width: 64px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.17);
+    font-size: 14px;
+    text-align: center;
+    transform: translateX(50%);
 }
 
 .gallery__empty {
@@ -415,9 +534,8 @@ input {
 
     .gallery__control {
         width: 40px;
-        height: 46px;
-        font-size: 36px;
-        line-height: 40px;
+        height: 40px;
+        font-size: 16px;
     }
 
     .gallery__control--previous {
@@ -426,6 +544,35 @@ input {
 
     .gallery__control--next {
         right: 8px;
+    }
+
+    .gallery__expand {
+        top: 8px;
+        right: 8px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .gallery__lightbox-image-wrap {
+        padding: 64px 12px 78px;
+    }
+
+    .gallery__lightbox-control {
+        top: auto;
+        bottom: 16px;
+        transform: none;
+    }
+
+    .gallery__lightbox-control--previous {
+        left: 12px;
+    }
+
+    .gallery__lightbox-control--next {
+        right: 12px;
+    }
+
+    .gallery__lightbox-counter {
+        bottom: 22px;
     }
 
     .estate__fact {
@@ -468,8 +615,10 @@ input {
 
     .site-header,
     .gallery__control,
+    .gallery__expand,
     .gallery__thumbnails,
-    .gallery__counter {
+    .gallery__counter,
+    .gallery__lightbox {
         display: none;
     }
 
